@@ -2,6 +2,42 @@
 
 #include <iostream>
 
+using namespace std;
+
+class A
+{
+public:
+	A()
+	{
+		_arr = (int*)malloc(sizeof(int) * _sz);
+	}
+
+
+private:
+	int* _arr =NULL;
+	int _sz = 8;
+};
+
+
+class Stack
+{
+public:
+	Stack()
+	{
+		_a = new int[_capacity];
+	}
+
+	~Stack()
+	{
+		delete[] _a;
+	}
+
+private:
+	int* _a = NULL;
+	int _capacity = 8;
+	int _top = 0;
+};
+
 int main()
 {
 	int* p1 = new int;
@@ -11,7 +47,10 @@ int main()
 
 	delete p1;
 	delete p2;
-	delete p3;
-	delete p4;
+	delete[] p3;
+	delete[] p4;
+
+	A* p5 = new A;
+	delete p5;
 	return 0;
 }
