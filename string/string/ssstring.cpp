@@ -36,7 +36,8 @@ int main()
 	string s1("hello world");
 	string::reverse_iterator it = s1.rbegin();//·´Ïòµü´úÆ÷
 	
-	auto it2 = s1.rbegin();.0
+	s1.reserve(100);
+	cout << s1 << " " << s1.size();
 
 	return 0;
 }
