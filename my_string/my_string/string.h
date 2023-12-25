@@ -105,8 +105,8 @@ namespace mine
 
 		void reserve(size_t n)
 		{
-			assert(n >= _capacity);
-			char* tmp = new char[n];
+			assert(n > _capacity);
+			char* tmp = new char[n+1];
 			strcpy(tmp,_str);
 			delete _str;
 			_str = tmp;
@@ -118,11 +118,96 @@ namespace mine
 			{
 				reserve(_capacity * 2);
 			}
+			_str[_size] = ch;
+			_size++;
+			_str[_size] = '\0';
 		}
 
-		void append()
+		void append(const string& s)
 		{
+			if (_capacity < _size + s._size)
+			{
+				reserve(_size + s._size + 1);
+			}
 
+		}
+
+		void resize(size_t size, const char ch = '\0')
+		{
+			if (size <= _size)
+			{
+				_size = size;
+				_str[_size] = '\0';
+			}
+			else 
+			{
+				if (size > _capacity)
+				{
+					_capacity = size;
+					reserve(_capacity);
+				}
+
+				for (int i = _size; i < size; i++)
+				{
+					_str[i] = ch;
+					++i;
+				}
+
+				_size = size;
+				_str[_size] = '\0';
+				
+			}
+		}
+
+		bool operator==(const string& s) const
+		{
+			const char* ptr1 = _str;
+			const char* ptr2 = s._str;
+			while (*ptr1 != '\0' && *ptr1 != '\0')
+			{
+
+			}
+		}
+
+		void swap(string& s)
+		{
+			std::swap(_str, s._str);
+			std::swap(_capacity, s._capacity);
+			std::swap(_size, s._size);
+		}
+
+		void Insert(size_t pos,const char ch)
+		{
+			if (_capacity <= pos)
+			{
+				reserve(_capacity == 0 ? 4 : _capacity * 2);
+			}
+			size_t end = _size + 1;//'\0'Ò²¿½±´µôÁË
+
+			while (end > pos)
+			{
+				_str[end] = _str[end - 1];
+			}
+
+			_str[pos] = ch;
+		}
+
+		string& operator+=(const string& s)
+		{
+			append(s);
+			return *this;
+		}
+
+		string& operator+=(const char ch)
+		{
+			push_back(ch);
+			return *this;
+		}
+
+		void clear()
+		{
+			_str[0] = '\0';
+			_size = 0;
 		}
 
 	private:
@@ -163,6 +248,33 @@ namespace mine
 		cout << s.c_str() << endl;
 		s[0] = '8';
 
+	}
+
+	const static size_t npos = -1;
+
+	ostream& operator<<(ostream& out, const string& s)
+	{
+		for (auto ch : s)
+		{
+			cout << ch;
+		}
+		cout << endl;
+		return out;
+	}
+
+	istream& operator>>(istream& in, string& s)
+	{
+		s.clear();
+		char ch;
+		ch = in.get();
+		while (ch != ' ' && ch != '\n')
+		{
+			s += ch;
+			ch = in.get();
+		}
+
+
+		return in;
 	}
 
 }
