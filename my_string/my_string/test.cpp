@@ -9,10 +9,10 @@ using namespace mine;
 
 int main()
 {
-	test1();
+	//test1();
 
-	//char* str = new char[20];
-	//delete[] str;
+	test2();
+
 
 	return 0;
 }

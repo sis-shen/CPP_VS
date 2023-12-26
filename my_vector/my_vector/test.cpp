@@ -6,7 +6,8 @@ using namespace std;
 
 #include "vector.h"
 
-void func(sup::vector<int> v)
+template <class T>
+void func(const sup::vector<T>& v)
 {
 	for (auto num : v)
 	{
@@ -35,15 +36,63 @@ void test1()
 	v1.resize(8, 99);
 	func(v1);
 
-	v1.resize(2);
+	auto ptr = v1.begin();
+	while (ptr != v1.end())
+	{
+		if (*ptr == 99)
+		{
+			ptr = v1.erase(ptr);
+		}
+		else
+		{
+			++ptr;
+		}
+	}
+	v1.push_back(6);
 	func(v1);
 
 }
 
+void test2()
+{
+	int arr[] = { 1,3,5,7,9,6,4,5 };
+	string s("hello");
+	sup::vector<int> v1(6, 6);
+	sup::vector<int> v2(arr, arr + 5);
+	sup::vector<char> v3(s.begin(), s.end());
+	func<int>(v1);
+	func<int>(v2);
+	func<char>(v3);
+}
+
+void test3()
+{
+	sup::vector<int> v1(6, 9);
+	sup::vector<int> v2(v1);
+	auto v3(v1);
+	
+	sup::vector<string> v4(25, "233");
+
+	auto v5(v4);
+	func<int>(v1);
+	func<int>(v2);
+	func<int>(v3);
+	func(v4);
+	func(v5);
+
+}
+
+void test4()
+{
+	//≤‚ ‘∂˛Œ¨vector
+	vector<vector<int>> vv;
+	vv.resize(9, vector<int>());
+	
+}
 
 int main()
 {
-	test1();
 
+	test4();
 	return 0;
 }

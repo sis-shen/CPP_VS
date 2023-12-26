@@ -14,11 +14,64 @@ namespace sup
 
 
 		vector()
-			:_start(nullptr)
-			,_finish(nullptr)
-			,_end_of_storage(nullptr)
 		{
 
+		}
+
+		vector(size_t n, const T& val)
+		{
+			reserve(n);
+
+			while (n--)
+			{
+				push_back(val);
+			}
+		}
+
+		vector(int n, const T& val)
+		{
+			reserve(n);
+
+			while (n--)
+			{
+				push_back(val);
+			}
+		}
+
+		template<class InputIterator>
+		vector(InputIterator first,InputIterator last)
+		{
+			InputIterator cur = first;
+			while (cur != last)
+			{
+				push_back(*cur);
+				++cur;
+			}
+		}
+
+		//拷贝构造
+		vector(const vector& v)
+		{
+			reserve(v.capacity());
+
+			iterator cur_this = begin();
+			const_iterator cur_v = v.begin();
+
+			while (cur_v != v.end())
+			{
+				*cur_this = *cur_v;
+				++cur_this;
+				++cur_v;
+				_finish++;
+			}
+
+		}
+
+
+		~vector()
+		{
+			delete[] _start;
+			_start = _finish = _end_of_storage = nullptr;
 		}
 
 		iterator begin()
@@ -82,7 +135,7 @@ namespace sup
 
 			if (_finish == _end_of_storage)
 			{
-				size_t len = pos - _start;
+				size_t len = pos - _start;//注意迭代器失效问题
 				reserve(capacity() == 0 ? 4 : capacity() * 2);
 				pos = _start + len;
 			}
@@ -95,6 +148,21 @@ namespace sup
 
 			*pos = val;
 			++_finish;
+
+		}
+
+		iterator erase(iterator pos)
+		{
+			assert(pos >= begin() && pos < end());
+			iterator next = pos;
+			++pos;
+			while (pos != end())
+			{
+				*(pos - 1) = *(pos);
+				++pos;
+			}
+			--_finish;
+			return next;
 		}
 
 		void reserve(size_t n)
@@ -105,8 +173,11 @@ namespace sup
 				size_t sz = size();
 				if (_start)
 				{
-					memcpy(tmp, _start, (sizeof(T) * size()));
-					delete _start;
+					for (size_t i = 0; i < size(); i++)
+					{
+						tmp[i] = _start[i];
+					}
+					delete[] _start;
 				}
 
 				_start = tmp;
@@ -125,13 +196,7 @@ namespace sup
 
 		void push_back(const T& x)
 		{
-			if (_finish == _end_of_storage)
-			{
-				reserve(capacity() == 0 ? 4 : capacity() * 2);
-			}
-
-			*_finish = x;
-			++_finish;
+			insert(_finish, x);
 		}
 
 		T& operator[](size_t pos)
@@ -146,8 +211,8 @@ namespace sup
 			return _start[pos];
 		}
 	private:
-		iterator _start;
-		iterator _finish;
-		iterator _end_of_storage;
+		iterator _start=nullptr;
+		iterator _finish = nullptr;
+		iterator _end_of_storage = nullptr;
 	};
 }

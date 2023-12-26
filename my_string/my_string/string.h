@@ -5,6 +5,9 @@ using namespace std;
 
 namespace mine
 {
+	const static size_t npos = -1;
+
+
 	class string
 	{
 	public:
@@ -62,19 +65,7 @@ namespace mine
 			return _str;
 		}
 
-		string& operator+=(const string& s)
-		{
-			char* tmp = new char[_capacity + s._capacity + 1];
-			strcpy(tmp, _str);
-			strcpy(tmp + _size, s._str);
 
-			delete[] _str;
-			_str = tmp;
-			_size += s._size;
-			_capacity += s._capacity;
-
-			return *this;
-		}
 
 		char& operator[](int pos)
 		{
@@ -108,7 +99,7 @@ namespace mine
 			assert(n > _capacity);
 			char* tmp = new char[n+1];
 			strcpy(tmp,_str);
-			delete _str;
+			delete[] _str;
 			_str = tmp;
 		}
 
@@ -147,7 +138,7 @@ namespace mine
 					reserve(_capacity);
 				}
 
-				for (int i = _size; i < size; i++)
+				for (size_t i = _size; i < size; i++)
 				{
 					_str[i] = ch;
 					++i;
@@ -161,14 +152,28 @@ namespace mine
 
 		bool operator==(const string& s) const
 		{
-			const char* ptr1 = _str;
-			const char* ptr2 = s._str;
-			while (*ptr1 != '\0' && *ptr1 != '\0')
-			{
-
-			}
+			return strcmp(_str, s._str) == 0;
 		}
 
+		bool operator>(const string& s) const
+		{
+			return strcmp(_str, s._str) > 0;
+		}
+
+		bool operator<(const string& s) const
+		{
+			return strcmp(_str, s._str) < 0;
+		}
+
+		bool operator>=(const string& s) const
+		{
+			return !(strcmp(_str, s._str) < 0);
+		}
+
+		bool operator<=(const string& s) const
+		{
+			return !(strcmp(_str, s._str) > 0);
+		}
 		void swap(string& s)
 		{
 			std::swap(_str, s._str);
@@ -176,9 +181,10 @@ namespace mine
 			std::swap(_size, s._size);
 		}
 
-		void Insert(size_t pos,const char ch)
+		void insert(size_t pos,const char ch)
 		{
-			if (_capacity <= pos)
+			assert(pos >= 0 && pos <= _size);
+			if (_size == _capacity)
 			{
 				reserve(_capacity == 0 ? 4 : _capacity * 2);
 			}
@@ -187,9 +193,71 @@ namespace mine
 			while (end > pos)
 			{
 				_str[end] = _str[end - 1];
+				--end;
 			}
 
 			_str[pos] = ch;
+			++_size;
+		}
+
+		void insert(size_t pos, const string& s)
+		{
+			assert(pos >= 0 && pos <= _size);
+			if (_capacity < _size + s._size)
+			{
+				reserve(_size + s._size);
+			}
+
+			size_t len = s._size;
+			size_t end = _size + len;
+			while (end > pos)
+			{
+				_str[end] = _str[end - len];
+				--end;
+			}
+
+			size_t cur_this = pos;
+			size_t cur_s = 0;
+			while (cur_s < s._size)
+			{
+				_str[cur_this++] = s._str[cur_s++];
+			}
+
+			_size += s._size;
+
+		}
+
+		void erase(size_t pos = 0, size_t len = npos)
+		{
+			assert(pos >= 0 && pos < _size);
+			if (len == npos || pos + len >= _size)
+			{
+				_str[pos] = '\0';
+				_size = pos;
+			}
+			else
+			{
+				strcpy(_str + pos, _str + pos + len);
+				_size = _size - len;
+			}
+			
+		}
+
+		void erase(iterator first, iterator last)
+		{
+			size_t len = last - first;
+			iterator start = _str;
+			size_t pos = first - start;
+			erase(pos, len);
+		}
+
+		void erase(iterator pos)
+		{
+			while (pos != end())
+			{
+				*pos = *(pos + 1);
+			}
+			*pos = '\0';
 		}
 
 		string& operator+=(const string& s)
@@ -215,6 +283,8 @@ namespace mine
 		size_t _size;
 		size_t _capacity;
 
+	private:
+
 		size_t strlen(const char* str)
 		{
 			size_t cnt = 0;
@@ -237,8 +307,25 @@ namespace mine
 			dst[cur] = res[cur];//º”»Î\0Ω·Œ≤;
 			return dst;
 		}
+
+		int strcmp(const char* s1, const char* s2) const
+		{
+			while (1)
+			{
+				if (*s1 != *s2)
+				{
+					return *s1 - *s2;
+				}
+				else if (*s1 == '\0' && *s2 == '\0')
+				{
+					return 0;
+				}
+			}
+		}
 	};
 
+
+	//========================
 	void test1()
 	{
 		mine::string s("hello");
@@ -250,7 +337,19 @@ namespace mine
 
 	}
 
-	const static size_t npos = -1;
+	void test2()
+	{
+		mine::string s("hello");
+		s.insert(5, ' ');
+		s.insert(6, "world");
+
+		s.erase(6, 20);
+		cout << s.c_str() << endl;
+		s.erase();
+		cout << s.c_str() << endl;
+		cout << "end";
+	}
+
 
 	ostream& operator<<(ostream& out, const string& s)
 	{
