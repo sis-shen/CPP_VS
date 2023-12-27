@@ -2,6 +2,7 @@
 
 #include <cstdlib>
 #include <cassert>
+#include <iostream>
 
 namespace sup
 {
@@ -72,6 +73,19 @@ namespace sup
 		{
 			delete[] _start;
 			_start = _finish = _end_of_storage = nullptr;
+		}
+
+		void swap(vector<T>& v)
+		{
+			std::swap(_start, v._start);
+			std::swap(_finish, v._finish);
+			std::swap(_end_of_storage, v._end_of_storage);
+		}
+
+		vector<T>& operator=(vector<T> v)
+		{
+			swap(v);
+			return *this;
 		}
 
 		iterator begin()
