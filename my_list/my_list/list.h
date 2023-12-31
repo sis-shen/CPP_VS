@@ -1,6 +1,5 @@
 #pragma once
 
-#include <iostream>
 
 namespace sup
 {
@@ -18,13 +17,14 @@ namespace sup
 		{}
 	};
 
-	template<class T,class Ptr,class Ref>
+	template<class T,class Ref>
 	struct _list_iterator
 	{
-		typedef _list_iterator<T,Ptr,Ref> self;
+		typedef _list_iterator<T,Ref> self;
 		typedef _list_node<T>* node;
 
 		node _ptr;
+
 		_list_iterator(node ptr = nullptr)
 			:_ptr(ptr)
 		{}
@@ -46,9 +46,9 @@ namespace sup
 			return _ptr->_val;
 		}
 
-		bool operator!=(const self& it)
+		bool operator!=(const self& it) const
 		{
-			return _ptr != it._ptr
+			return _ptr != it._ptr;
 		}
 		
 	};
@@ -60,8 +60,8 @@ namespace sup
 		typedef _list_node<T> link_node;
 		typedef _list_node<T>* node;
 
-		typedef _list_iterator<T, link_node*,T&> iterator;
-		typedef const _list_iterator<T, const link_node*, const T&> const_iterator;
+		typedef _list_iterator<T,T&> iterator;
+		typedef _list_iterator<T, const T&> const_iterator;
 
 		list()
 			:_head(nullptr)
@@ -71,25 +71,82 @@ namespace sup
 			_head->_prev = _head;
 		}
 
-		
+		list(const_iterator first, const_iterator last)
+		{
+			EmptyInit();
+			while (first != last)
+			{
+				push_back(*first);
+				++first;
+			}
+		}
+
+		list(iterator first, iterator last)
+		{
+
+			while (first != last)
+			{
+				push_back(*first);
+				++first;
+			}
+		}
+
+		list(const list& lst)
+		{
+			EmptyInit();
+			list tmp(lst.begin(), lst.end());
+			swap(tmp);
+		}
+
+		void swap(list& tmp)
+		{
+			std::swap(_head, tmp._head);
+		}
+
+		~list()
+		{
+			clear();
+
+			delete _head;
+			_head = nullptr;
+
+		}
+
+		void clear()
+		{
+			node cur = _head->_next;
+			while (cur != _head)
+			{
+				node next = cur->_next;
+				delete cur;
+				cur = next;
+			}
+
+			_head->_next = _head;
+			_head->_prev = _head;
+		}
 
 		iterator begin()
 		{
 			return iterator(_head->_next);
 		}
 
-		iterator end()
+		const_iterator begin() const
+		{
+			return const_iterator(_head->_next);
+		}
+
+		const_iterator end() const
+		{
+			return const_iterator(_head);
+		}
+
+
+		iterator end() 
 		{
 			return iterator(_head);
 		}
 
-		node getNode(const T& val)
-		{
-			node temp = new link_node(val);
-			temp->_next = nullptr;
-			temp->_prev = nullptr;
-			return temp;
-		}
 
 		void push_back(const T& val)
 		{
@@ -107,6 +164,15 @@ namespace sup
 
 	private:
 		node _head;
+
+	protected:
+		void EmptyInit()
+		{
+			_head = new link_node;//ÉÚ±øÎ»
+			_head->_next = _head;
+			_head->_prev = _head;
+		}
+
 	};
 
 

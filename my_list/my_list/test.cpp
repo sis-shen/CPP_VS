@@ -7,16 +7,19 @@ int main()
 {
 	sup::list<int> lt1;
 
+
 	lt1.push_back(1);
 	lt1.push_back(2);
 	lt1.push_back(3);
 	lt1.push_back(4);
 
 
-	//for (auto e : lt1)
-	//{
-	//	std::cout << e << ' ';
-	//}
+	sup::list<int> lt2(lt1);
+	for (auto e : lt2)
+	{
+		std::cout << e << "->";
+	}
+
 
 	return 0;
 }
