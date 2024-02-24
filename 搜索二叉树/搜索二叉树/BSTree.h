@@ -78,7 +78,7 @@ public:
 		_InOrder(root->_right);
 	}
 
-	bool Find(const K& k)
+	bool Find(const K& key)
 	{
 		Node* cur = _root;
 		while (cur)
@@ -109,10 +109,12 @@ public:
 
 		while (cur)
 		{
-			parent = cur;
+			
 			if (cur->_key < key)
+				parent = cur,
 				cur = cur->_right;
 			else if (cur->_key > key)
+				parent = cur,
 				cur = cur->_left;
 			else
 			{
@@ -120,7 +122,9 @@ public:
 				//×óÎª¿Õ
 				if (cur->_left == nullptr)
 				{
-					if (parent->_left == cur)
+					if (_root == cur)
+						_root = cur->_right;
+					else if (parent->_left == cur)
 						parent->_left = cur->_right;
 					else
 						parent->_right = cur->_right;
@@ -129,7 +133,9 @@ public:
 				}
 				else if (cur->_right == nullptr)
 				{
-					if (parent->_left == cur)
+					if (cur == _root)
+						_root = cur->_left;
+					else if (parent->_left == cur)
 						parent->_left = cur->_left;
 					else
 						parent->_right = cur->_left;
@@ -164,6 +170,39 @@ public:
 		return false;
 	}
 
+	bool _FindR(Node* root,const K& key)
+	{
+		if (root == nullptr) return false;
+		if (root->_key == key) return true;
+
+		if (root->_key < key) return _FindR(root->_right, key);
+		else return _FindR(root->_left, key);
+	}
+
+	bool FindR(const K& key)
+	{
+		return _FindR(_root,key);
+	}
+
+	bool _InsertR(Node*&root, const K& key)
+	{
+		if (root == nullptr)
+		{
+			root = new Node(key);
+			return true;
+		}
+
+		if (root->_key > key)
+			return _InsertR(root->_lef, key);
+		else if (root->_key < key)
+			return _InsertR(root->_right);
+		else return false;
+	}
+
+	bool InsertR(const K& key)
+	{
+		return _InsertR(_root, key);
+	}
 private:
 	Node* _root = nullptr;
 };
