@@ -15,19 +15,11 @@ void TestBSTree()
 		tree.Insert(e);
 	}
 
-	tree.InOrder();
-
-	tree.Erase(13);
-	tree.InOrder();
-
-	tree.Erase(14);
-	tree.InOrder();
-
-	tree.Erase(10);
-	tree.InOrder();
-
-	tree.Erase(8);
-	tree.InOrder();
+	for (auto e : arr)
+	{
+		tree.Erase(e);
+		tree.InOrder();
+	}
 }
 
 int main()

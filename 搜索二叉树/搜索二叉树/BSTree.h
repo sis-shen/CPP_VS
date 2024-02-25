@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <algorithm>
 using namespace std;
 //BinarySearchTree --BSTree
 //SearchBinaryTree --SBTree
@@ -202,6 +203,46 @@ public:
 	bool InsertR(const K& key)
 	{
 		return _InsertR(_root, key);
+	}
+
+	bool _EraseR(Node*& root, const K& key)
+	{
+		if (root == nullptr) return false;
+
+		if (root->_key < key) _EraseR(root->_right, key);
+		else if (root->_key) _EraseR(root->_left, key);
+		else
+		{
+			if (root->_left == nullptr) {
+				auto del = root;
+				root = root->_right;
+				delete del;
+			}
+			else if (root->_right == nullptr)
+			{
+				auto del = root;
+				root = root->_left;
+				delete del;
+			}
+			else
+			{
+				Node* max_left = root->_left;
+				while (max_left->_right)
+					max_left = max_left->_right;
+				swap(root->_key, max_left->_key);
+
+				_EraseR(root->_left, key);
+
+			}
+
+		}
+		return true;
+
+	}
+
+	bool EraseR(const K& key)
+	{
+		return _EraseR(_root, key);
 	}
 private:
 	Node* _root = nullptr;
