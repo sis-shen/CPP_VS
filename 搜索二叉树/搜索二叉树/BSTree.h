@@ -27,7 +27,24 @@ class BSTree
 {
 	typedef BSTreeNode<K> Node;
 public:
+	~BSTree()
+	{
+		Destroy(_root);
+		_root = nullptr;
+	}
 
+	BSTree() = default;//指定强制生成默认构造
+
+	BSTree(const BSTree<K>& t)
+	{
+		_root = Copy(t._root);
+	}
+
+	BSTree<K>& operator=(BSTree<K> t)
+	{
+		swap(_root, t._root);
+		return *this;
+	}
 
 	bool Insert(const K& key)
 	{
@@ -69,15 +86,7 @@ public:
 		cout << endl;
 	}
 
-	void _InOrder(Node* root)
-	{
-		if (root == nullptr)
-			return;
 
-		_InOrder(root->_left);
-		cout << root->_key << " ";
-		_InOrder(root->_right);
-	}
 
 	bool Find(const K& key)
 	{
@@ -185,24 +194,40 @@ public:
 		return _FindR(_root,key);
 	}
 
-	bool _InsertR(Node*&root, const K& key)
-	{
-		if (root == nullptr)
-		{
-			root = new Node(key);
-			return true;
-		}
 
-		if (root->_key > key)
-			return _InsertR(root->_lef, key);
-		else if (root->_key < key)
-			return _InsertR(root->_right);
-		else return false;
-	}
 
 	bool InsertR(const K& key)
 	{
 		return _InsertR(_root, key);
+	}
+
+
+
+	bool EraseR(const K& key)
+	{
+		return _EraseR(_root, key);
+	}
+
+protected:
+	Node* Copy(Node* root)
+	{
+		if (root == nullptr) return nullptr;
+
+		Node* newRoot = new  Node(root->_key);
+		newRoot->_left = Copy(root->_left);
+		newRoot->_right = Copy(root->_right);
+		return newRoot;
+
+	}
+
+	void Destroy(Node* root)
+	{
+		if (root == nullptr) return;
+
+		Destroy(root->_left);
+		Destroy(root->_right);
+
+		delete root;
 	}
 
 	bool _EraseR(Node*& root, const K& key)
@@ -240,10 +265,31 @@ public:
 
 	}
 
-	bool EraseR(const K& key)
+	bool _InsertR(Node*& root, const K& key)
 	{
-		return _EraseR(_root, key);
+		if (root == nullptr)
+		{
+			root = new Node(key);
+			return true;
+		}
+
+		if (root->_key > key)
+			return _InsertR(root->_lef, key);
+		else if (root->_key < key)
+			return _InsertR(root->_right);
+		else return false;
 	}
+
+	void _InOrder(Node* root)
+	{
+		if (root == nullptr)
+			return;
+
+		_InOrder(root->_left);
+		cout << root->_key << " ";
+		_InOrder(root->_right);
+	}
+
 private:
 	Node* _root = nullptr;
 };
