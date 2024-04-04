@@ -234,11 +234,56 @@
 //	return 0;
 //}
 
-#include<iostream>
-using namespace std;
+//#include<iostream>
+//using namespace std;
+//
+//int main()
+//{
+//	cout << -5 % 2;
+//	return 0;
+//}
 
+#include <iostream>
+using namespace std;
+int sum = 0;
+int wei(int m)
+{
+    int n = 0;
+    while (m)
+    {
+        m /= 10;
+        n++;
+    }
+    return n;
+}
 int main()
 {
-	cout << -5 % 2;
-	return 0;
+    for (int i = 1; i <= 10; i++)
+    {
+        int icopy = i;
+        int shuwei = wei(i);
+        if (shuwei % 2 == 1)
+        {
+            continue;
+        }
+        int a = 0;
+        for (int m = 1; m <= shuwei / 2; m++)
+        {
+            a += i % 10;
+            i /= 10;
+        }
+        int b = 0;
+        for (int m = 1; m <= shuwei / 2; m++)
+        {
+            b += i % 10;
+            i /= 10;
+        }
+        if (a == b)
+        {
+            sum++;
+        }
+    }
+    cout << sum;
+    // 请在此输入您的代码
+    return 0;
 }
