@@ -136,6 +136,11 @@ public:
 	}
 
 
+	int Height()
+	{
+		return _Height(_root);
+	}
+
 private:
 	int _Height(Node* root)
 	{
