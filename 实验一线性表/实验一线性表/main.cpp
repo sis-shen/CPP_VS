@@ -1,7 +1,6 @@
 #define  _CRT_SECURE_NO_WARNINGS 1
 
-#include <iostream>
-#include "slist.h"
+#include "experiment.h"
 using namespace std;
 
 
@@ -9,7 +8,9 @@ using namespace std;
 int main()
 {
 
-	testMain();
+	Examin().testMain();
+	cout<<endl << endl;
 
+	design::TestMain();
 	return 0;
 }

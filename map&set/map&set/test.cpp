@@ -1,25 +1,14 @@
 #include <iostream>
-#include <map>
-#include <set>
+#include "Map"
+#include "Set"
 
 using namespace std;
 
-void testmap()
-{
-	map<int, int> dic;
-	dic.insert(make_pair(1, 1));
-	dic.insert({ 2,2 });
 
-	for (auto e : dic)
-	{
-		cout << e.second << endl;
-	}
-}
 
 
 int main()
 {
-	testmap();
-
+	sup::set
 	return 0;
 }

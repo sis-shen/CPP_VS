@@ -61,12 +61,47 @@ namespace list
 	{
 	public:
 		typedef ListNode<T> node;
+		typedef _list_iterator<T, T&, T*> iterator;
+		typedef _list_iterator<T, const T&, const T*> const_iterator;
 		
 		list()
 		{
-			_head = new node;//创建哨兵位
-			_head->_next = _head;
-			_head->_prev = _head;
+			empty_init();
+		}
+
+		~list()
+		{
+			clear();
+			delete _head;
+			_head = nullptr;
+		}
+
+		iterator begin()
+		{
+			return iterator(_head->_next);
+		}
+
+		iterator end()
+		{
+			return iterator(_head);
+		}
+
+		const_iterator begin() const
+		{
+			return const_iterator(_head->_next);
+		}
+
+		const_iterator end() const
+		{
+			return const_iterator(_head);
+		}
+
+		bool clear()
+		{
+			while (!empty())
+			{
+				pop_front();
+			}
 		}
 
 		bool push_front(const T& value)
@@ -126,6 +161,14 @@ namespace list
 		bool empty()
 		{
 			return _head->_next == _head;
+		}
+
+	private:
+		void empty_init()//初始化对象
+		{
+			_head = new node;//创建哨兵位
+			_head->_next = _head;
+			_head->_prev = _head;
 		}
 
 	private:

@@ -51,6 +51,11 @@ namespace slist
 			return _ptr != it._ptr;
 		}
 
+		bool operator==(const self& it)const
+		{
+			return _ptr == it._ptr;
+		}
+
 	};
 
 	template <class T>
@@ -85,7 +90,10 @@ namespace slist
 
 		~slist()
 		{
-			Destroy();
+			Clear();
+			delete _head;
+			_tail = nullptr;
+			_head = nullptr;
 		}
 
 		iterator begin()
@@ -109,6 +117,21 @@ namespace slist
 		}
 
 	public:
+		bool Insert(iterator pos,const T& value)
+		{
+			if (pos == end()) return false;
+
+			Node* cur = pos._ptr;
+			Node* next = cur->_next;
+			Node* newNode = new Node(value);
+			if (newNode == nullptr) return false;
+
+			cur->_next = newNode;
+			newNode->_next = next;
+
+			return true;
+		}
+
 		void PrintList()
 		{
 			iterator first = begin();
@@ -162,15 +185,14 @@ namespace slist
 			std::swap(_tail, sl._tail);
 		}
 
-		bool Destroy()
+		bool Clear()
 		{
 			if (Empty()) return false;
 			while (!Empty())
 			{
 				PopFront();
 			}
-			_tail = nullptr;
-			_head = nullptr;
+
 
 			return true;
 		}
@@ -264,34 +286,3 @@ void testRangeFor()
 	cout << endl;
 }
 
-void testMain()
-{
-	//²âÊÔÔöÉ¾²é¸Ä
-	slist::slist<int> slst;
-	slist::slist<int> copy(slst);
-
-	int arr1[] = { 1,2,3,4,5 };
-	int arr2[] = { 10,9,8,7,6 };
-
-	for (auto e : arr1) slst.PushBack(e);
-	slst.PrintList();
-
-	for (auto e : arr2) slst.PushFront(e);
-	slst.PrintList();
-
-	auto it = slst.Find(8);
-	*it = 888;
-	slst.PrintList();
-
-	slst.Erase(it);
-	slst.PrintList();
-
-	int n = 5;
-	while (n--) slst.PopBack();
-	slst.PrintList();
-
-	n = 4;
-	while (n--) slst.PopFront();
-	slst.PrintList();
-
-}
