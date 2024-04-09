@@ -28,7 +28,7 @@ public:
 	{}
 };
 
-template <class K, class T>
+template <class K, class T,class KeyOfT>
 class RBTree
 {
 	typedef RBTreeNode<T> Node;
@@ -47,13 +47,14 @@ public:
 	Node* Find(const K& key)
 	{
 		Node* cur = _root;
+		KeyOfT kot;
 		while (cur)
 		{
-			if (cur->_kv.first < key)
+			if (kot(cur->_data) < key)
 				cur = cur->_right;
-			else if (cur->_kv.first > key)
+			else if (kot(cur->_data) > key)
 				cur = cur->_left;
-			else if (cur->_kv.first == key)
+			else if (kot(cur->_data) == key)
 				return cur;
 		}
 
@@ -68,17 +69,17 @@ public:
 			_root->_col = BLACK;
 			return true;
 		}
-
+		KeyOfT kot;
 		Node* parent = nullptr;
 		Node* cur = _root;
 		while (cur)
 		{
-			if (cur->data < data)
+			if (kot(cur->_data) < kot(data))
 			{
 				parent = cur;
 				cur = cur->_right;
 			}
-			else if (cur->_kv.first > kv.first)
+			else if (kot(cur->_data) > kot(data))
 			{
 				parent = cur;
 				cur = cur->_left;
@@ -89,9 +90,9 @@ public:
 			}
 		}
 
-		cur = new Node(kv);
+		cur = new Node(data);
 		cur->_col = RED;
-		if (parent->_data > kv.first)
+		if (kot(parent->_data) > kot(data))
 		{
 			parent->_left = cur;
 		}

@@ -4,23 +4,30 @@
 
 namespace sup
 {
-	template <class T, class V>
+	template <class K, class V>
 	class map
 	{
-	public:
-		bool insert(const K& key)
+		struct MapKeyOfT
 		{
-			return _t.Insert(key);
-		}
+			const K& operator()(const pair<const K, V>& kv)
+			{
+				return kv.first;
+			}
+		};
+	public:
+		//bool insert(const K& key)
+		//{
+		//	return _t.Insert(key);
+		//}
 	private:
-		RBTree<K, pair<const K, V>> _t;
+		RBTree<K, pair<const K, V>,MapKeyOfT> _t;
 	};
 
-	void test_map()
-	{
-		map<int, int> m;
-		int a[] = { 1,2,3,4,5 };
+	//void test_map()
+	//{
+	//	map<int, int> m;
+	//	int a[] = { 1,2,3,4,5 };
 
-		for (auto e : a) m.insert(e);
-	}
+	//	for (auto e : a) m.insert(e);
+	//}
 }

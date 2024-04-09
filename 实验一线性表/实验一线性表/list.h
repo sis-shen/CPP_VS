@@ -52,6 +52,16 @@ namespace list
 			return &(_ptr->_value);
 		}
 
+		bool operator==(const self& it)
+		{
+			return _ptr == it._ptr;
+		}
+
+		bool operator!=(const self& it)
+		{
+			return !operator==(it);
+		}
+
 
 	};
 
@@ -158,11 +168,60 @@ namespace list
 			return true;
 		}
 
+		bool erase(iterator it)
+		{
+			if (it == end()) return false;
+			node* cur = it._ptr;
+			node* prev = cur->_prev;
+			node* next = cur->_next;
+
+			prev->_next = next;
+			next->_prev = prev;
+
+			delete cur;
+			return true;
+		}
+
 		bool empty()
 		{
 			return _head->_next == _head;
 		}
 
+		void print_list()
+		{
+			auto cur = begin();
+			while (cur != end())
+			{
+				cout << *cur << " ";
+				++cur;
+			}
+			cout << endl;
+		}
+
+		iterator find(const T& value)
+		{
+			auto cur = begin();
+			while (cur != end() and *cur != value)
+			{
+				++cur;
+			}
+			return cur;
+		}
+
+		bool insert(iterator it,const T& value)
+		{
+			if (it == end()) return false;
+			node* cur = it->_ptr;
+			node* next = cur->_next;
+
+			node* new_node = new node(value);
+
+			cur->_next = new_node;
+			new_node->_prev = cur;
+			new_node->_next = next;
+			next->_prev = cur;
+			return true;
+		}
 	private:
 		void empty_init()//初始化对象
 		{

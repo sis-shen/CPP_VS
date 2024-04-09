@@ -13,11 +13,12 @@ using namespace std;
 class Examin
 {
 public:
-	void testMain()
+	void testSList()
 	{
 		//测试增删查改
+		cout << "测试单链表" << endl;
 		slist::slist<int> slst;
-		slist::slist<int> copy(slst);
+		slist::slist<int> copy(slst);//测试拷贝构造
 
 		int arr1[] = { 1,2,3,4,5 };
 		int arr2[] = { 10,9,8,7,6 };
@@ -52,6 +53,51 @@ public:
 		n = 4;
 		while (n--) slst.PopFront();
 		slst.PrintList();
+
+
+	}
+
+	void testList()
+	{
+		cout << "测试双向循环带头链表" << endl;
+		list::list<int> lst;
+		list::list<int> lst(lst);//测试拷贝构造
+
+		int arr1[] = { 1,2,3,4,5 };
+		int arr2[] = { 10,9,8,7,6 };
+
+		cout << "测试尾插" << endl;
+		for (auto e : arr1) lst.push_back(e);
+		lst.print_list();
+
+		cout << "测试头插" << endl;
+		for (auto e : arr2) lst.push_front(e);
+		lst.print_list();
+
+
+		cout << "测试查找" << endl;
+		auto it = lst.find(8);
+		*it = 888;
+		lst.print_list();
+
+		cout << "测试插入" << endl;
+		lst.insert(it, 666);
+		lst.print_list();
+
+
+		cout << "测试删除" << endl;
+		lst.erase(it);
+		lst.print_list();
+
+		cout << "测试尾删*5" << endl;
+		int n = 5;
+		while (n--) lst.pop_back();
+		lst.print_list();
+
+		cout << "测试头删*4" << endl;
+		n = 4;
+		while (n--) lst.pop_front();
+		lst.print_list();
 
 	}
 };
@@ -192,3 +238,43 @@ namespace design
 
 }
 
+namespace Josegh
+{
+	void TestMain()
+	{
+		vector<int> arr({ 5,7,3,9,4,8,2 });//n个人的密码列表
+		list::list<pair<int, int>> lst;
+		for (int i = 0; i < arr.size(); i++)
+		{
+			lst.push_back({ i + 1,arr[i] });
+		}
+
+		int m = 0;
+		cout << "请输入第一个m的值: ";
+
+		auto cur = lst.begin();
+		vector<int> ret;
+		while (!lst.empty())
+		{
+			while (--m)//循环m-1
+			{
+				++cur;
+				if (cur == lst.end()) ++cur;
+			}
+
+			auto tmp = ++cur;
+			ret.push_back(tmp->first);//储存编号
+			m = tmp->second;//更新m
+			lst.erase(tmp);
+
+		}
+
+		//打印结果
+		cout << "出列顺序为:" << endl;
+		for (auto e : ret)
+		{
+			cout << e << " ";
+		}
+		cout << endl;
+	}
+}

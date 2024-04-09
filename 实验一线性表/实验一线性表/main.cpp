@@ -8,9 +8,9 @@ using namespace std;
 int main()
 {
 
-	Examin().testMain();
+	//Examin().testMain();
 	cout<<endl << endl;
 
-	design::TestMain();
+	//design::TestMain();
 	return 0;
 }

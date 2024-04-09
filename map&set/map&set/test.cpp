@@ -1,6 +1,6 @@
 #include <iostream>
-#include "Map"
-#include "Set"
+#include "Map.h"
+#include "Set.h"
 
 using namespace std;
 
@@ -9,6 +9,6 @@ using namespace std;
 
 int main()
 {
-	sup::set
+	
 	return 0;
 }
