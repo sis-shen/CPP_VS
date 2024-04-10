@@ -9,6 +9,6 @@ using namespace std;
 
 int main()
 {
-	
+	sup::test_set();
 	return 0;
 }

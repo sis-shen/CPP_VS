@@ -15,6 +15,17 @@ namespace sup
 			}
 		};
 	public:
+		typedef typename RBTree<K, K, SetKeyOfT>::iterator iterator;
+
+		iterator begin()
+		{
+			return _t.begin();
+		}
+
+		iterator end()
+		{
+			return _t.end();
+		}
 		bool insert(const K& key)
 		{
 			return _t.Insert(key);

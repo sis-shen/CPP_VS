@@ -287,3 +287,16 @@
 //    // 请在此输入您的代码
 //    return 0;
 //}
+
+#include <iostream>
+#include <utility>
+#include <vector>
+using namespace std;
+
+int main()
+{
+	vector<int> arr({5,3,6,7,2});
+	arr.erase(0);
+
+	return 0;
+}

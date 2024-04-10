@@ -28,13 +28,47 @@ public:
 	{}
 };
 
+template <class T,class Ref,class Ptr>
+struct __RBTreeIterator
+{
+	typedef __RBTreeIterator self;
+	typedef RBTreeNode<T> Node;
+	Node* _node;
+
+	__RBTreeIterator(Node* node)
+		:_node(node)
+	{}
+
+	Ref operator*()
+	{
+		return _node->_data;
+	}
+
+	Ptr operator->()
+	{
+		return &(_node->_data);
+	}
+
+	bool operator!=(const self& s)
+	{
+		return _node != s._node;
+	}
+
+	self& operator++()
+	{
+		// ....
+
+		return *this;
+	}
+};
+
 template <class K, class T,class KeyOfT>
 class RBTree
 {
 	typedef RBTreeNode<T> Node;
-
 public:
-
+	typedef __RBTreeIterator<T, T&, T*> iterator;
+	typedef __RBTreeIterator<T, const T&, const T*> const_iterator;
 
 	~RBTree()
 	{
@@ -44,6 +78,21 @@ public:
 
 
 public:
+	iterator begin()
+	{
+		Node* cur = _root;
+		while (cur && cur->_left)
+		{
+			cur = cur->_left;
+		}
+		return iterator(cur);
+	}
+
+	iterator begin()
+	{
+		return iterator(nullptr);
+	}
+
 	Node* Find(const K& key)
 	{
 		Node* cur = _root;
