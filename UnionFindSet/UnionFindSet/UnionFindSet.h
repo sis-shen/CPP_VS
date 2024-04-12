@@ -35,17 +35,26 @@ public:
 		int root2 = FindRoot(x2);
 
 		if (root1 == root2) return;
-
+		if (abs(_ufs[root1]) < abs(_ufs[root2]))
+			swap(root1, root2);
 		_ufs[root1] += _ufs[root2];
 		_ufs[root2] = root1;
 	}
 
 	int FindRoot(int x)
 	{
-		int parent = x;
-		while (_ufs[parent] >= 0)
-			parent = _ufs[parent];
-		return parent;
+		int root = x;
+		while (_ufs[root] >= 0)
+			root = _ufs[root];
+
+		while (_ufs[x] >= 0)//Â·¾¶Ñ¹Ëõ
+		{
+			int parent = _ufs[x];
+			_ufs[x] = root;
+			
+			x = parent;
+		}
+		return root;
 	}
 
 	bool IsInSet(int x1,int x2)
