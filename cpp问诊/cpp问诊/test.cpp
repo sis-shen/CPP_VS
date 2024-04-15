@@ -288,59 +288,72 @@
 //    return 0;
 //}
 
+//#include <iostream>
+//#include <queue>
+//#include <vector>
+//#include <unordered_set>
+//using namespace std;
+//int main()
+//{
+//    typedef pair<int, int> PII;
+//    int n, k;
+//    cin >> n >> k;
+//    vector<int> arr(n);
+//    vector<int> next(n), prev(n);
+//    priority_queue<PII, vector<PII>, greater<PII>> q;
+//    for (int i = 0; i < n; i++)
+//    {
+//        int num = 0;
+//        cin >> num;
+//        q.push({ num,i });
+//        arr[i] = num;
+//        prev[i] = i - 1;
+//        next[i] = i + 1;
+//    }
+//
+//    while (q.size() > n - k)
+//    {
+//        int num = q.top().first;
+//        int id = q.top().second;
+//        q.pop();
+//
+//        if (num != arr[id])//oops,弹错了，更新一下
+//        {
+//            q.push({ arr[id], id });
+//        }
+//        else
+//        {
+//            if (next[id] < n) { arr[next[id]] += arr[id]; prev[next[id]] = prev[id]; }
+//            if (prev[id] >= 0) { arr[prev[id]] += arr[id]; next[prev[id]] = next[id]; }
+//        }
+//    }
+//
+//    //提取答案
+//    vector<int> ret(n);
+//    while (q.size())
+//    {
+//        int id = q.top().second; q.pop();
+//        ret[id] = arr[id];
+//    }
+//
+//    for (auto e : ret)
+//    {
+//        if (e)
+//            cout << e << " ";
+//    }
+//
+//    return 0;
+//}
+
 #include <iostream>
-#include <queue>
-#include <vector>
-#include <unordered_set>
+
 using namespace std;
+
 int main()
 {
-    typedef pair<int, int> PII;
-    int n, k;
-    cin >> n >> k;
-    vector<int> arr(n);
-    vector<int> next(n), prev(n);
-    priority_queue<PII, vector<PII>, greater<PII>> q;
-    for (int i = 0; i < n; i++)
-    {
-        int num = 0;
-        cin >> num;
-        q.push({ num,i });
-        arr[i] = num;
-        prev[i] = i - 1;
-        next[i] = i + 1;
-    }
-
-    while (q.size() > n - k)
-    {
-        int num = q.top().first;
-        int id = q.top().second;
-        q.pop();
-
-        if (num != arr[id])//oops,弹错了，更新一下
-        {
-            q.push({ arr[id], id });
-        }
-        else
-        {
-            if (next[id] < n) { arr[next[id]] += arr[id]; prev[next[id]] = prev[id]; }
-            if (prev[id] >= 0) { arr[prev[id]] += arr[id]; next[prev[id]] = next[id]; }
-        }
-    }
-
-    //提取答案
-    vector<int> ret(n);
-    while (q.size())
-    {
-        int id = q.top().second; q.pop();
-        ret[id] = arr[id];
-    }
-
-    for (auto e : ret)
-    {
-        if (e)
-            cout << e << " ";
-    }
-
-    return 0;
+	int num = 1e9 + 7;
+	double q = 1e9 + 7;
+	cout << num<<endl;
+	cout << q << endl;
+	return 0;
 }

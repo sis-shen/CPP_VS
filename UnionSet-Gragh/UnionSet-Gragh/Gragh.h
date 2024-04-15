@@ -5,6 +5,7 @@
 #include <functional>
 #include "UnionFindSet.h"
 #include <queue>
+#include <iostream>
 using namespace std;
 
 
@@ -140,7 +141,34 @@ public:
 	//	
 	//}
 
-	void Dijkstra(const V& src, , vector<W>& dist, vector<int>& pPath)
+	void PrintShortPath(const V& src, vector<W>& dist, vector<int>& pPath)
+	{
+		size_t srci = GetVertexIndex(src);
+		size_t n = _vertexs.size();
+		for (size_t i = 0; i < n; ++i)
+		{
+			if (i != srci)
+			{
+				vector<int> path;
+				size_t parenti = i;
+				while (parenti != srci)
+				{
+					path.push_back(parenti);
+					parenti = pPath[parenti];
+				}
+				path.push_back(srci);
+				reverse(path.begin(), path.end());
+
+				for (auto index : path)
+				{
+					cout << _vertexs[index] << "->";
+				}
+				cout<<"|" << dist[i] << endl;
+			}
+		}
+	}
+
+	void Dijkstra(const V& src, vector<W>& dist, vector<int>& pPath)
 	{
 		size_t srci = GetVertexIndex(src);
 		size_t n = _vertexs.size();
@@ -167,6 +195,16 @@ public:
 			}
 			S[u] = true;
 
+			//ËÉ³Ú¸üÐÂ
+			for (size_t v = 0; v < n; v++)
+			{
+				if (_matrix[u][v] != MAX_W and dist[u] + _matrix[u][v] < dist[v])
+				{
+					dist[v] = dist[u] + _matrix[u][v];
+					pPath[v] = u;
+				}
+			}
+			cnt++;
 		}
 	}
 
