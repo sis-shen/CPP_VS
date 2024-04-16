@@ -6,6 +6,7 @@
 #include "UnionFindSet.h"
 #include <queue>
 #include <iostream>
+#include <unordered_set>
 using namespace std;
 
 
@@ -18,7 +19,7 @@ public:
 	//1.IO输入
 	//2.图结构关系写到文件，读取文件
 	//3.手动添加边
-	Gragh(const V*a,size_t n)
+	Gragh(const V*a, size_t n)
 	{
 		_vertexs.reserve(n);
 		for (size_t i = 0; i < n; i++)
@@ -35,20 +36,32 @@ public:
 
 	}
 
+	Gragh()
+	{}
+
+
 	struct Edge
 	{
-		int _srci;
-		int _dsti;
+		size_t _srci;
+		size_t _dsti;
 		W _w;
 
-		Edge(size_t srci, size_t dsti, const W& w) :_srci(srci), _dsti(dsti), _w(w) {};
+		Edge(size_t srci = 0, size_t dsti = 0, const W& w = MAX_W) :_srci(srci), _dsti(dsti), _w(w) {}
 
-		bool operator>(const Edge& e)
+		Edge(const Edge& e)
+		{
+			_srci = e._srci;
+			_dsti = e._dsti;
+			_w = e._w;
+		}
+
+		bool operator>(const Edge& e) const
 		{
 			return _w > e._w;
 		}
-	};
 
+	};
+	
 	W Kruskal(Self& minTree)
 	{
 		size_t n = _vertexs.size();
@@ -57,9 +70,9 @@ public:
 		minTree._matrix.resize(n);
 		for (size_t i= 0; i < n; ++i)
 		{
-			minTree._matrix.resize(n, MAX_W);
+			minTree._matrix[i].resize(n, MAX_W);
 		}
-		priority_queue<Edge, vector<Edge>, greater<Edge>> minque;
+		priority_queue<Edge, vector<Edge>, greater<Edge> > minque;
 		for(size_t i = 0;i<n;i++)
 			for (size_t j = i+1; j < n; j++)
 			{
@@ -96,7 +109,122 @@ public:
 		}
 	}
 
+	W prim(Self& minTree,const V& src)
+	{
+		int srci = GetVertexIndex(src);
+		size_t n = _vertexs.size();
+		minTree._vertexs = _vertexs;
+		minTree._indexMap = _indexMap;
+		minTree._matrix.resize(n);
+		for (size_t i = 0; i < n; ++i)
+		{
+			minTree._matrix[i].resize(n, MAX_W);
+		}
 
+		//unordered_set<int> X;
+		//unordered_set<int> Y;
+		//X.insert(srci);
+
+		//for (size_t i = 0; i < n; i++)
+		//{
+		//	if (i != srci)
+		//	{
+		//		Y.insert(i);
+		//	}
+		//}
+
+		priority_queue<Edge, vector<Edge>, greater<Edge> >minq;
+		for (size_t i = 0; i < n; i++)
+		{
+			if (_matrix[srci][i] != MAX_W)
+			{
+				minq.push(Edge(srci, i, _matrix[srci][i]));
+			}
+		}
+		vector<int> X(n, false);
+		vector<int> Y(n, true);
+
+		X[srci] = true;
+		Y[srci] = false;
+
+		size_t cnt = 0;
+		W totalW = W();
+		while (!minq.empty() )
+		{
+			Edge min = minq.top(); minq.pop();
+			
+			//判环
+			if (X[min._srci] and X[min._dsti])
+			{
+				//cout << "构成环：";
+				//cout << _vertexs[min._srci] << "->" << _vertexs[min._dsti] << " | " <<min._w << endl;
+				continue;
+			}
+
+			minTree._ADDEdge(min._srci, min._dsti, min._w);
+			//打印过程
+			//cout << _vertexs[min._srci] << "->" << _vertexs[min._dsti] << " | " << min._w << endl;
+
+			X[min._dsti] = true;
+			Y[min._dsti] = false;
+			if (cnt == n - 1) break;
+			totalW += min._w;
+			for (size_t i = 0; i < n; i++)
+			{
+				if (_matrix[min._dsti][i] != MAX_W and Y[i])
+				{
+					minq.push(Edge(min._dsti, i, _matrix[min._dsti][i]));
+				}
+			}
+			cnt++;
+		}
+
+		if (cnt == n - 1)
+		{
+			return totalW;
+		}
+		else
+		{
+			return MAX_W;
+		}
+
+
+	}
+
+	bool BellmanFord(const V& src, vector<W>& dist, vector<int>& pPath)
+	{
+		size_t n = _vertexs.size();
+		size_t srci = GetVertexIndex(src);
+		dist.resize(n, MAX_W);
+		pPath.resize(n, -1);
+
+		dist[srci] = W();
+		for (int k = 0; k < n; k++)//总体最多更新n轮
+		{
+			for (int i = 0; i < n; i++)
+			{
+				for (int j = 0; j < n; j++)
+				{
+					if (_matrix[i][j] != MAX_W and dist[i] != MAX_W and dist[i] + _matrix[i][j] < dist[j])
+					{
+
+						dist[j] = dist[i] + _matrix[i][j];
+						pPath[j] = i;
+					}
+				}
+			}
+
+		}
+
+		return true;
+	}
+
+	//===============测试
+	//void Test()
+	//{
+	//	priority_queue<Edge, vector<Edge>, greater<Edge> >minq;
+
+	//}
 
 	void ADDEdge(const V & src, const V & dst, const W & w = 1)
 	{
@@ -115,6 +243,7 @@ public:
 		}
 
 	}
+
 
 	int GetVertexIndex(const V& v)
 	{
@@ -170,8 +299,8 @@ public:
 
 	void Dijkstra(const V& src, vector<W>& dist, vector<int>& pPath)
 	{
-		size_t srci = GetVertexIndex(src);
-		size_t n = _vertexs.size();
+		int srci = GetVertexIndex(src);
+		int n = _vertexs.size();
 		dist.resize(n, MAX_W);
 		pPath.resize(n, -1);
 
@@ -183,7 +312,7 @@ public:
 		int cnt = 1;
 		while (cnt < n)
 		{
-			size_t u = 0;
+			int u = 0;
 			W min = MAX_W;
 			for (size_t i = 0; i < n; i++)
 			{
@@ -196,7 +325,7 @@ public:
 			S[u] = true;
 
 			//松弛更新
-			for (size_t v = 0; v < n; v++)
+			for (int v = 0; v < n; v++)
 			{
 				if (_matrix[u][v] != MAX_W and dist[u] + _matrix[u][v] < dist[v])
 				{
@@ -208,9 +337,34 @@ public:
 		}
 	}
 
+	void Print()
+	{
+		for (auto e : _vertexs)
+		{
+			cout << e << " ";
+		}
+		cout<<endl<<endl;
+
+		for (int i = 0; i < _vertexs.size(); i++)
+		{
+			for (int j = 0; j < _vertexs.size(); j++)
+			{
+				if (i < j and _matrix[i][j] != MAX_W)
+				{
+					cout << _vertexs[i] << "->" << _vertexs[j] <<" | "<<_matrix[i][j]<< endl;
+				}
+				if (Direction and i > j and _matrix[i][j] != MAX_W)
+				{
+					cout << _vertexs[i] << "->" << _vertexs[j] <<" | " << _matrix[i][j]<< endl;
+				}
+			}
+		}
+
+	}
+
 private:
 	vector<V> _vertexs;//顶点集合
-	vector<vector<W>> _matrix;
+	vector<vector<W> > _matrix;
 	unordered_map<V, int> _indexMap;
 };
 
