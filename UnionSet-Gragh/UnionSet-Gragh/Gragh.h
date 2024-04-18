@@ -201,19 +201,20 @@ public:
 		dist[srci] = W();
 		for (int k = 0; k < n; k++)//总体最多更新n轮
 		{
+			bool update = false;
 			for (int i = 0; i < n; i++)
 			{
 				for (int j = 0; j < n; j++)
 				{
 					if (_matrix[i][j] != MAX_W and dist[i] != MAX_W and dist[i] + _matrix[i][j] < dist[j])
 					{
-
+						update = true;
 						dist[j] = dist[i] + _matrix[i][j];
 						pPath[j] = i;
 					}
 				}
 			}
-
+			if (update == false) break;
 		}
 
 		return true;
@@ -360,6 +361,37 @@ public:
 			}
 		}
 
+	}
+
+	void FloydWarshall(vector<vector<W> >& vvDist, vector<vector<int> >& vvpPath)
+	{
+		size_t n = _vertexs.size();
+		vvDist.resize(n);
+		vvpPath.resize(n);
+
+		for (size_t i = 0; i < n; i++)
+		{
+			vvDist[i].resize(n, MAX_W);
+			vvpPath[i].resize(n, -1);
+		}
+
+		for (size_t i = 0; i < n; ++i)
+		{
+			for (size_t j = 0; j < n; j++)
+			{
+				if (_matrix[i][j] != MAX_W)
+				{
+					vvDist[i][j] = _matrix[i][j];
+					vvpPath[i][j] = i;
+				}
+
+				if (i == j)
+				{
+					vvDist[i][j] = 0;
+					//vvpPath[i][j] = i;
+				}
+			}
+		}
 	}
 
 private:
