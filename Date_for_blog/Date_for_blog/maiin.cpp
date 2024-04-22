@@ -5,11 +5,16 @@ using namespace std;
 class Date
 {
 public:
-    void Init(int year = 1, int month = 1, int day = 1)
+    Date(int year = 1,int month = 1,int day = 1):_year(year),_month(month),_day(day)
+        {}
+
+    void TestPrint()
     {
-        _year = year;
-        _month = month;
-        _day = day;
+        _year = 2024;//隐式调用this访问成员变量
+        this->_month = 4;//显式调用this
+        _day = 1;
+        Print();//隐式调用this来调用成员函数Print()
+        this->Print();//显式调用this，效果与上一句相同
     }
 
     void Print()
@@ -29,9 +34,8 @@ private:
 int main()
 {
     Date d;
-    Date* pd = &d;
-    d._num;
 
+    d.TestPrint();
     return 0;
 }
 

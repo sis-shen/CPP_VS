@@ -328,10 +328,10 @@ public:
 			//松弛更新
 			for (int v = 0; v < n; v++)
 			{
-				if (_matrix[u][v] != MAX_W and dist[u] + _matrix[u][v] < dist[v])
+				if (S[u] == false and _matrix[u][v] != MAX_W and dist[u] + _matrix[u][v] < dist[v])
 				{
 					dist[v] = dist[u] + _matrix[u][v];
-					pPath[v] = u;
+					pPath[v] = u;	
 				}
 			}
 			cnt++;
@@ -388,7 +388,22 @@ public:
 				if (i == j)
 				{
 					vvDist[i][j] = 0;
-					//vvpPath[i][j] = i;
+				}
+			}
+		}
+		for (size_t k = 0; k < n; k++)
+		{
+			for (size_t i = 0; i < n; ++i)
+			{
+				for (size_t j = 0; j < n; ++j)
+				{
+					//k作为中间点尝试去更新i->j
+					if (vvDist[i][k] != MAX_W and vvDist[k][j] != MAX_W
+						and vvDist[i][k] + vvDist[k][j] < vvDist[i][j])
+					{
+						vvDist[i][j] = vvDist[i][k] + vvDist[k][j];
+						vvpPath[i][j] =vvpPath[k][j];
+					}
 				}
 			}
 		}

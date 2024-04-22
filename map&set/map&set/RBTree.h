@@ -31,13 +31,14 @@ public:
 template <class T,class Ref,class Ptr>
 struct __RBTreeIterator
 {
-	typedef __RBTreeIterator self;
+	typedef __RBTreeIterator<T, T&, T*> iterator
+	typedef __RBTreeIterator<T,Ref,Ptr> self;
 	typedef RBTreeNode<T> Node;
 	Node* _node;
 
-	__RBTreeIterator(Node* node)
-		:_node(node)
-	{}
+	__RBTreeIterator(Node* node):_node(node){}
+
+	__RBTreeIterator(const iterator& it) :_node(it._node) {};
 
 	Ref operator*()
 	{
@@ -56,7 +57,18 @@ struct __RBTreeIterator
 
 	self& operator++()
 	{
-		// ....
+		if (_node == nullptr) return *this;
+		Node* cur = _node;
+		Node* prev = cur;
+		cur = cur->_parent;
+		if (_node->_left == nullptr)
+		{
+			while (cur and cur->_parent and cur->_right == prev)
+			{
+				prev = cur;
+				cur = cur->_parent;
+			}
+		}
 
 		return *this;
 	}

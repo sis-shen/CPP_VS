@@ -81,9 +81,30 @@ void testGraghBellmanFord()
 	g.PrintShortPath('s', dist, parentPath);
 }
 
+void TestFloydWarshall()
+{
+	const char* str = "12345";
+	Gragh<char, int, INT_MAX, true> g(str, strlen(str));
+	g.ADDEdge('1', '2', 3);
+	g.ADDEdge('1', '3', 8);
+	g.ADDEdge('1', '5', -4);
+	g.ADDEdge('2', '4', 1);
+	g.ADDEdge('2', '5', 7);
+	g.ADDEdge('3', '2', 4);
+	g.ADDEdge('4', '1', 2);
+	g.ADDEdge('4', '3', -5);
+	g.ADDEdge('5', '4', 6);
+
+	vector<vector<int> > vvDist;
+	vector<vector<int> > vvpPath;
+	g.FloydWarshall(vvDist, vvpPath);
+
+
+}
+
 int main()
 {
-	testGraghBellmanFord();
+	TestFloydWarshall();
 	//testGraghDijkstra();
 	//TestGraghMinTree();
 	return 0;
