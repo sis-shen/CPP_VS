@@ -31,7 +31,7 @@ public:
 template <class T,class Ref,class Ptr>
 struct __RBTreeIterator
 {
-	typedef __RBTreeIterator<T, T&, T*> iterator
+	typedef __RBTreeIterator<T, T&, T*> iterator;
 	typedef __RBTreeIterator<T,Ref,Ptr> self;
 	typedef RBTreeNode<T> Node;
 	Node* _node;
@@ -61,17 +61,29 @@ struct __RBTreeIterator
 		Node* cur = _node;
 		Node* prev = cur;
 		cur = cur->_parent;
-		if (_node->_left == nullptr)
+		
+		if (cur->_right == nullptr)
 		{
-			while (cur and cur->_parent and cur->_right == prev)
+			while (cur->_parent and cur->_parent->_right == cur)
 			{
-				prev = cur;
 				cur = cur->_parent;
 			}
+			_node = cur;
+		}
+		else
+		{
+			cur = cur->_right;
+			while (cur->_left)
+			{
+				cur = cur->_left;
+			}
+			_node = cur;
 		}
 
 		return *this;
 	}
+
+
 };
 
 template <class K, class T,class KeyOfT>
