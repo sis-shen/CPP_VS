@@ -13,6 +13,11 @@ void TestHefmanTree()
 	ht.print_tree();
 	cout << endl;
 	ht.print_code_list();
+
+	ht.remake();
+	ht.print_tree();
+	cout << endl;
+	ht.print_code_list();
 }
 
 
