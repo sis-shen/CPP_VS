@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <string>
 #include <cassert>
+#include <fstream>
 using namespace std;
 
 
@@ -33,7 +34,8 @@ namespace sup
 	class HefmanTree
 	{
 	public:
-		HefmanTree(const vector<T>& arr, const vector<int>& weighs)
+
+		HefmanTree(const vector<T>& arr = vector<T>(), const vector<int>& weighs = vector<int>())
 		{
 			int n = arr.size();
 			_vertexs.resize(n);
@@ -49,6 +51,13 @@ namespace sup
 			}
 			//checkQ();
 			make_tree();
+		}
+
+		HefmanTree(const HefmanTree<T>& ht)
+		{
+			_vertexs = ht._vertexs;
+			_weigh = ht._weigh;
+			remake_tree();
 		}
 
 		void remake()
@@ -174,6 +183,31 @@ namespace sup
 			{
 				assert(false);
 			}
+		}
+
+		void whrite_file()
+		{
+			fstream f;
+			f.open("hfmTree.txt", ios::out);
+			for (auto e : _vertexs)
+			{
+				f << e << " ";
+			}
+			f << endl;
+
+			for (auto i : _weigh)
+			{
+				f << i << " ";
+			}
+
+			f.close();
+		}
+
+		void read_file(const string& filename)
+
+		bool empty()
+		{
+			return _vertexs.size() == 0;
 		}
 
 	private:
