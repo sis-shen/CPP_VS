@@ -9,14 +9,14 @@ void TestHefmanTree()
 	string str = "abcdef";
 	vector<char> ch(str.begin(), str.end());
 	vector<int> weigh({ 9,8,7,6,5,4 });
-
-	sup::HefmanTree<char>ht(ch, weigh);
+	sup::HefmanTree<char> tmp(ch, weigh);
+	sup::HefmanTree<char>ht = tmp;
 
 	ht.print_tree();
 	cout << endl;
 	ht.print_code_list();
 
-	ht.remake();
+	ht.remake_tree();
 	ht.print_tree();
 	cout << endl;
 	ht.print_code_list();
@@ -47,9 +47,40 @@ void Init()
 	}
 
 	sup::HefmanTree<char> ht(str, weighs);
+	g_ht = ht;
 	ht.whrite_file();
 
 }
+
+void menu()
+{
+	cout << "=============================";
+	cout << "         请输入指令            ";
+	cout << "    I.初始化  E.编码  D.译码     ";
+	cout << "    P.打印代码  T.打印赫夫曼树     ";
+	cout << "=============================";
+}
+
+//void TestExp()
+//{
+//	char ch;
+//	while (true)
+//	{
+//		menu();
+//		cin >> ch;
+//		switch (ch)
+//		{
+//		case 'I': Init(); break;
+//		case 'E': Encode(); break;
+//		case 'D': Decode(); break;
+//		case 'P': PrintCode(); break;
+//		case 'T': TreePrint(); break;
+//		default:
+//			cout << "输入非法，请重新输入" << endl << endl;
+//			break;
+//		}
+//	}
+//}
 
 
 int main()

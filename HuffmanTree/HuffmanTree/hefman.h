@@ -60,7 +60,7 @@ namespace sup
 			remake_tree();
 		}
 
-		void remake()
+		void remake_tree()
 		{
 			destroy_tree();//先销毁已有的树和优先级队列
 
@@ -68,7 +68,7 @@ namespace sup
 			for (int i = 0; i < n; i++)
 			{
 				Node* cur = new Node(_weigh[i]);
-				_IndexToNode[_weigh[i]] = cur;
+				_IndexToNode[i] = cur;
 				minq.push(cur);
 			}
 
@@ -204,6 +204,9 @@ namespace sup
 		}
 
 		void read_file(const string& filename)
+		{
+
+		}
 
 		bool empty()
 		{
