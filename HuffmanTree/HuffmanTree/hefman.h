@@ -60,7 +60,7 @@ namespace sup
 			remake_tree();
 		}
 
-		void remake_tree()
+		void remake_tree()//已建树时使用
 		{
 			destroy_tree();//先销毁已有的树和优先级队列
 
@@ -115,7 +115,7 @@ namespace sup
 			cout << endl;
 		}
 
-		void make_tree()
+		void make_tree()//顶点和权重已就绪,第一层节点已就绪，从零建树
 		{
 			while (minq.size() > 1)
 			{
@@ -185,7 +185,7 @@ namespace sup
 			}
 		}
 
-		void whrite_file()
+		void whrite_file(const string& filename)
 		{
 			fstream f;
 			f.open("hfmTree.txt", ios::out);
@@ -205,7 +205,41 @@ namespace sup
 
 		void read_file(const string& filename)
 		{
+			_weigh.resize(0);
+			_vertexs.resize(0);
+			fstream f;
+			f.open("hfmTree.txt", ios::in);
 
+			string line;
+			getline(f, line);
+			for (auto ch : line)
+			{
+				if (ch != ' ')
+				{
+					_vertexs.push_back(ch);
+				}
+			}
+
+			getline(f, line);
+			int num = 0;
+			for (auto ch : line)
+			{
+				if (ch == ' ')
+				{
+					_weigh.push_back(num);
+					num = 0;
+				}
+				else
+				{
+					num = num * 10 - '0' + ch;
+				}
+			}
+			f.close();
+			for (int i = 0; i < _vertexs.size(); i++)
+			{
+				_index[_vertexs[i]] = i;
+			}
+			remake_tree();
 		}
 
 		bool empty()
