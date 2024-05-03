@@ -6,7 +6,7 @@ void testHT()
 {
 	vector<int> arr({ 1,6,7,66,34,5,-19,54,20,40 });
 
-	sup::HashTable<int, int> ht;
+	sup_closed_address::HashTable<int, int> ht;
 	for (auto e : arr)
 	{
 		ht.Insert({ e,e });
@@ -20,7 +20,32 @@ void testHT()
 void TestStrHT()
 {
 	vector<string> arr({ "Æ»¹û","éÙ×Ó","Ïã½¶","ÆÏÌÑ","·ïÀæ" });
-	sup::HashTable<string, string> ht;
+	sup_closed_address::HashTable<string, string> ht;
+	for (auto str : arr)
+	{
+		ht.Insert({ str,str });
+	}
+
+	ht.Print();
+}
+
+void TestBucket()
+{
+	vector<int> arr({ 1,6,7,66,34,5,-19,54,20,40 });
+
+	sup_hash_bucket::HashTable<int, int> ht;
+	for (auto num : arr)
+	{
+		ht.Insert({ num,num });
+	}
+	ht.Erase(1);
+	ht.Print();
+}
+
+void TestBucket2()
+{
+	vector<string> arr({ "Æ»¹û","éÙ×Ó","Ïã½¶","ÆÏÌÑ","·ïÀæ" });
+	sup_hash_bucket::HashTable<string, string> ht;
 	for (auto str : arr)
 	{
 		ht.Insert({ str,str });
@@ -31,6 +56,6 @@ void TestStrHT()
 
 int main()
 {
-	TestStrHT();
+	TestBucket2();
 	return 0;
 }

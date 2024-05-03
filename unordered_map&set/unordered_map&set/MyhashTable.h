@@ -157,19 +157,19 @@ namespace sup_closed_address
 
 namespace sup_hash_bucket
 {
-	template<class K,class V>
+	template<class T>
 	struct hashNode
 	{
-		hashNode(const pair<K,V>& kv) :_next(nullptr), _kv(kv) {}
+		hashNode(const T& data) :_next(nullptr), _data(data) {}
 
-		hashNode<K, V>* _next;
-		pair<K, V> _kv;
+		hashNode<T>* _next;
+		T _data;
 	};
 
-	template<class K, class V, class Hash = HashFunc<K>>
+	template<class K, class T, class Hash = HashFunc<K>,class KeyOfT>
 	class HashTable
 	{
-		typedef hashNode<K, V> Node;
+		typedef hashNode<T> Node;
 	public:
 		HashTable() :_cnt(0)
 		{
@@ -191,13 +191,14 @@ namespace sup_hash_bucket
 			}
 		}
 
-		bool Insert(const pair<K, V>& kv)
+		bool Insert(const T& data)
 		{
-			if (Find(kv.first))
+			KeyOfT kft;
+			if (Find(kft(data))
 				return false;
 
 			Hash hf;
-
+			
 			if (_cnt == _tables.size())
 			{
 				vector<Node*> newTables;
@@ -209,7 +210,7 @@ namespace sup_hash_bucket
 					while (cur)
 					{
 						Node* next = cur->_next;
-						size_t hashi = hf(cur->_kv.first) % newTables.size();
+						size_t hashi = hf(kft(cur->_data)) % newTables.size();
 						cur->_next = newTables[hashi];
 						newTables[hashi] = cur;
 
@@ -221,7 +222,7 @@ namespace sup_hash_bucket
 
 				_tables.swap(newTables);
 			}
-			size_t hashi = hf(kv.first) % _tables.size();
+			size_t hashi = hf(kft(data)) % _tables.size();
 			Node* newnode = new Node(kv);
 			newnode->_next = _tables[hashi];
 			_tables[hashi] = newnode;
@@ -231,12 +232,13 @@ namespace sup_hash_bucket
 
 		Node* Find(const K& key)
 		{
+			KeyOfT kft;
 			Hash hf;
 			size_t hashi = hf(key) % _tables.size();
 			Node* cur = _tables[hashi];
 			while (cur)
 			{
-				if (cur->_kv.first == key)
+				if (kft(cur->_data) == key)
 				{
 					return cur;
 				}
@@ -249,6 +251,7 @@ namespace sup_hash_bucket
 
 		bool Erase(const K& key)
 		{
+			KeyOfT kft;
 			Hash hf;
 			size_t hashi = hf(key) % _tables.size();
 			Node* prev = nullptr;
@@ -256,7 +259,7 @@ namespace sup_hash_bucket
 
 			while (cur)
 			{
-				if (cur->_kv.first == key)
+				if (kft(cur->_data) == key)
 				{
 					if (prev)
 					{
