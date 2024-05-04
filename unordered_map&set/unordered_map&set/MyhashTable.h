@@ -51,6 +51,8 @@ namespace sup_closed_address
 		Status _s;
 	};
 
+	
+
 	template <class K,class V, class Hash = HashFunc<K>>
 	class HashTable
 	{
@@ -166,10 +168,98 @@ namespace sup_hash_bucket
 		T _data;
 	};
 
-	template<class K, class T, class Hash = HashFunc<K>,class KeyOfT>
+	template<class K, class T, class KeyOfT, class Hash>
+	class HashTable;
+
+	template<class K, class T,class Ref,class Ptr, class KeyOfT, class Hash = HashFunc<K> >
+	struct __HTIterator
+	{
+		typedef hashNode<T> Node;
+		typedef __HTIterator<K, T, Ref,Ptr,KeyOfT, Hash> Self;
+
+		Node* _node;  
+		HashTable<K, T, KeyOfT, Hash>* _pht;
+		size_t _hashi;
+
+		__HTIterator(Node* node, HashTable<K, T, KeyOfT, Hash>* pht,size_t hashi)
+			:_node(node),_pht(pht),_hashi(hashi)
+		{}
+
+		__HTIterator(const __HTIterator<K, T,T&, 
+			T*, KeyOfT, Hash>& self)
+			:_node(self._node),_pht(self._pht),_hashi(self._hashi)
+		{}
+
+		Self& operator++()
+		{
+			if (_node->_next)
+			{
+				_node = _node->_next;
+			}
+			else
+			{
+				//Hash hf;
+				//KeyOfT kot;
+				//size_t hashi = hf(kot(_node->_data)) % _pht->_tables.size() + 1;
+				//while (hashi < _pht->_tables.size() && _pht->_tables[hashi] == nullptr) hashi++;
+				//if (hashi == _pht->_tables.size())
+				//	_node = nullptr;
+				//else
+				//	_node = _pht->_tables[hashi];
+				++_hashi;
+				while (_hashi < _pht->_tables.size() and _pht->_tables[_hashi] == nullptr) _hashi++;
+				if (_hashi == _pht->_tables.size())
+					_node = nullptr;
+				else
+					_node = _pht->_tables[_hashi];
+			}
+
+			return *this;
+		}
+
+		bool operator!=(const Self& it)
+		{
+			return _node != it._node;
+		}
+
+		Ref operator*()
+		{
+			return _node->_data;
+		}
+
+		Ptr operator->()
+		{
+			return &(_node->_data);
+		}
+	};
+
+	template<class K, class T, class KeyOfT, class Hash = HashFunc<K>>
 	class HashTable
 	{
 		typedef hashNode<T> Node;
+
+		template<class K, class T,class Ref,class Ptr ,class KeyOfT, class Hash>
+		friend struct __HTIterator;
+	public:
+		typedef typename __HTIterator<K, T,T&,T*, KeyOfT, Hash> iterator;
+		typedef typename __HTIterator<K, T,const T&,const T*, KeyOfT, Hash> const_iterator;
+
+		iterator begin()
+		{
+			for (size_t i = 0; i < _tables.size(); i++)
+			{
+				if (_tables[i])
+				{
+					return iterator(_tables[i], this, i);
+				}
+			}
+			return end();
+		}
+
+		iterator end()
+		{
+			return iterator(nullptr, this, -1);
+		}
 	public:
 		HashTable() :_cnt(0)
 		{
@@ -191,11 +281,12 @@ namespace sup_hash_bucket
 			}
 		}
 
-		bool Insert(const T& data)
+		pair<iterator,bool> Insert(const T& data)
 		{
 			KeyOfT kft;
-			if (Find(kft(data))
-				return false;
+			iterator it = Find(kft(data));
+			if (it != end())
+				return {it,false};
 
 			Hash hf;
 			
@@ -211,7 +302,7 @@ namespace sup_hash_bucket
 					{
 						Node* next = cur->_next;
 						size_t hashi = hf(kft(cur->_data)) % newTables.size();
-						cur->_next = newTables[hashi];
+						cur->_next = newTables[hashi];//Í·²å
 						newTables[hashi] = cur;
 
 						cur = next;
@@ -223,14 +314,14 @@ namespace sup_hash_bucket
 				_tables.swap(newTables);
 			}
 			size_t hashi = hf(kft(data)) % _tables.size();
-			Node* newnode = new Node(kv);
+			Node* newnode = new Node(data);
 			newnode->_next = _tables[hashi];
 			_tables[hashi] = newnode;
 			++_cnt;
-			return true;
+			return {iterator(newnode,this,hashi),true};
 		}
 
-		Node* Find(const K& key)
+		iterator Find(const K& key)
 		{
 			KeyOfT kft;
 			Hash hf;
@@ -240,13 +331,13 @@ namespace sup_hash_bucket
 			{
 				if (kft(cur->_data) == key)
 				{
-					return cur;
+					return iterator(cur, this, hashi);
 				}
 
 				cur = cur->_next;
 			}
 
-			return nullptr;
+			return end();
 		}
 
 		bool Erase(const K& key)

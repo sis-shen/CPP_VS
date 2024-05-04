@@ -1,5 +1,5 @@
-#include "HashTable.h"
 
+#include "HashTable.h"
 using namespace std;
 
 void testHT()
@@ -54,8 +54,8 @@ void TestBucket2()
 	ht.Print();
 }
 
-int main()
-{
-	TestBucket2();
-	return 0;
-}
+//int main()
+//{
+//	TestBucket2();
+//	return 0;
+//}
