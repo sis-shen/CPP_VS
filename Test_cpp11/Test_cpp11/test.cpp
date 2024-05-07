@@ -1,3 +1,40 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <functional>
+using namespace std;
+
+//struct Point
+//{
+//	int _x;
+//	int _v;
+//};
+//
+//int main()
+//{
+//	vector<int> v1 = { 1,2,3,4,5,6 };
+//
+//	auto il = { 1,2,3,4,5,6 };
+//	cout << typeid(il).name() << endl;
+//
+//
+//	return 0;
+//}
+
+//int main()
+//{
+//	int i = 0;
+//	int j = 1;
+//	const int& r1 = 10;
+//	const int& r2 = i + j;
+//
+//	int&& rr1 = 10;
+//	int&& rr2 = i + j;
+//
+//	int&& rr3 = move(i);
+//	return 0;
+//}
+
 #pragma once
 #include <iostream>
 #include <cassert>
@@ -6,7 +43,6 @@ using namespace std;
 namespace mine
 {
 	const static size_t npos = -1;
-
 
 	class string
 	{
@@ -27,7 +63,7 @@ namespace mine
 
 		iterator end()
 		{
-			return _str+_size;
+			return _str + _size;
 		}
 
 		const_iterator end() const
@@ -50,6 +86,21 @@ namespace mine
 			_capacity = s._capacity;
 			_str = new char[_capacity + 1];
 			strcpy(_str, s._str);
+		}
+		////移动构造
+		string(string&& str)
+		{
+			cout << "移动构造" << endl;
+
+			swap(str);
+		}
+
+		//移动赋值
+		string& operator=(string&& s)
+		{
+			cout << "移动赋值" << endl;
+			swap(s);
+			return *this;
 		}
 
 		~string()
@@ -97,8 +148,8 @@ namespace mine
 		void reserve(size_t n)
 		{
 			assert(n > _capacity);
-			char* tmp = new char[n+1];
-			strcpy(tmp,_str);
+			char* tmp = new char[n + 1];
+			strcpy(tmp, _str);
 			delete[] _str;
 			_str = tmp;
 			_capacity = n;
@@ -111,7 +162,7 @@ namespace mine
 				if (_capacity)
 					reserve(_capacity * 2);
 				else
-					reserve(1);
+					reserve(2);
 			}
 			_str[_size] = ch;
 			_size++;
@@ -134,7 +185,7 @@ namespace mine
 				_size = size;
 				_str[_size] = '\0';
 			}
-			else 
+			else
 			{
 				if (size > _capacity)
 				{
@@ -150,7 +201,7 @@ namespace mine
 
 				_size = size;
 				_str[_size] = '\0';
-				
+
 			}
 		}
 
@@ -185,7 +236,7 @@ namespace mine
 			std::swap(_size, s._size);
 		}
 
-		void insert(size_t pos,const char ch)
+		void insert(size_t pos, const char ch)
 		{
 			assert(pos >= 0 && pos <= _size);
 			if (_size == _capacity)
@@ -244,7 +295,7 @@ namespace mine
 				strcpy(_str + pos, _str + pos + len);
 				_size = _size - len;
 			}
-			
+
 		}
 
 		void erase(iterator first, iterator last)
@@ -380,5 +431,27 @@ namespace mine
 		return in;
 	}
 
+	string to_string(int x)
+	{
+		string ret;
+		while (x)
+		{
+			ret.push_back(x % 10 + '0');
+			x /= 10;
+		}
+
+		std::reverse(ret.begin(), ret.end());
+
+		return ret;
+	}
+
 }
 
+//移动构造
+int main()
+{
+	mine::string s = mine::to_string(123);
+	std::cout << s;
+
+	return 0;
+}
