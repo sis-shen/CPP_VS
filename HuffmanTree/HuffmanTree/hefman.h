@@ -44,10 +44,10 @@ namespace sup
 			{
 				_vertexs[i] = arr[i];
 				_weigh[i] = weighs[i];
-				_weigh2index[weighs[i]] = i;
 				_index[arr[i]] = i;
 				Node* cur = new Node(weighs[i]);
 				_IndexToNode[i] = cur;
+				_Node2Index[cur] = i;
 				minq.push(cur);
 			}
 			//checkQ();
@@ -70,6 +70,7 @@ namespace sup
 			{
 				Node* cur = new Node(_weigh[i]);
 				_IndexToNode[i] = cur;
+				_Node2Index[cur] = i;
 				minq.push(cur);
 			}
 
@@ -84,7 +85,6 @@ namespace sup
 			}
 
 			_index[t] = _vertexs.size();
-			_weigh2index[w] = _vertexs.size();
 			_vertexs.push_back(t);
 			_weigh.push_back(w);
 			remake_tree();
@@ -144,22 +144,49 @@ namespace sup
 
 		void print_tree()
 		{
-			queue<Node*> q;
-			q.push(minq.top());
-			while (q.size())
-			{
-				int n = q.size();
-				while (n--)
-				{
-					Node* cur = q.front(); q.pop();
-					cout << cur->_w << "  ";
+			int height = tree_height();
 
-					if (cur->_left) q.push(cur->_left);
-					if (cur->_right) q.push(cur->_right);
-				}
-				cout << endl;
+			int sz = pow(2, height);
+			vector<Node*> tree(sz, nullptr);
+			fill_full_tree(minq.top(), tree, 0);//从根开始构建满二叉树
+			
+			for (int i = 0; i < sz; i++)
+			{
+				int h = sqrt(i+1);
+				//打印空格
+				Node* root = tree[i];
+				string line;
+				for (int j = 0; j < pow(2, height - h) - 1; j++)
+					line.push_back(' ');
+				cout << line;
 			}
+
 		}
+	private:
+		void fill_full_tree(Node* root, vector<Node*>& arr,int pos)
+		{
+			arr[pos] = root;
+			if (root->_left)
+				fill_full_tree(root->_left, arr, pos * 2 + 1);
+			if (root->_right)
+				fill_full_tree(root->_right, arr, pos * 2 + 2);
+		}
+
+		int tree_height()
+		{
+			Node* root = minq.top();
+			return _tree_height(root);
+		}
+
+		int _tree_height(Node* root)
+		{
+			if (root == nullptr) return 0;
+			int left = tree_height(root->_left);
+			int right = tree_height(root->_right);
+			return 1 + max(left, right);
+		}
+
+	public:
 
 		string generate_code(const T& t)
 		{
@@ -188,16 +215,6 @@ namespace sup
 			}
 		}
 
-		int get_weight2index(int w)
-		{
-			if (_weigh2index.count(w))
-				return _weigh2index[w];
-			else
-			{
-				cout << "failed to get weight " << w << endl;
-				assert(false);
-			}
-		}
 
 		void whrite_file(const string& filename)
 		{
@@ -252,7 +269,6 @@ namespace sup
 			for (int i = 0; i < _vertexs.size(); i++)//重建哈希表
 			{
 				_index[_vertexs[i]] = i;
-				_weigh2index[_weigh[i]] = i;
 			}
 			remake_tree();
 		}
@@ -268,7 +284,7 @@ namespace sup
 				if (cur->_left == nullptr && cur->_right == nullptr)
 				{
 					//找到叶子节点，即到头了
-					T ch = _vertexs[get_weight2index(cur->_w)];//尾插字节
+					T ch = _vertexs[_Node2Index[cur]];//尾插字节
 					if (ch == '#')
 						ret.push_back(' ');
 					else
@@ -288,7 +304,7 @@ namespace sup
 				index++;
 			}
 
-			T ch = _vertexs[get_weight2index(cur->_w)];//尾插字节
+			T ch = _vertexs[_Node2Index[cur]];//尾插字节
 			if (ch == '#')
 				ret.push_back(' ');
 			else
@@ -345,7 +361,7 @@ namespace sup
 		vector<int> _weigh;//下标->权重
 		unordered_map<T, int> _index;//顶点->下标
 		unordered_map<int, Node*> _IndexToNode;//下标->节点
-		unordered_map<int, int> _weigh2index;//权重->下标
+		unordered_map<Node*, int> _Node2Index;//节点->下标
 		priority_queue<Node*, vector<Node*>, Cmp> minq;
 	};
 }

@@ -141,11 +141,38 @@ public:
 		f.close();
 		string ret;
 		ret = g_ht.decode(code);
-		cout << "译码结果为: " << ret;
+		cout << "译码结果为: " << ret<<endl;
 		f.open("TextFile.txt", ios::out);
 		f << ret;
 		f.close();
 
+	}
+
+	void Print()
+	{
+		fstream f;
+		fstream out;
+		out.open("TextFile.txt", ios::out);
+		f.open("CodeFile.txt", ios::in);
+		string code;
+		getline(f, code);
+		for (int i = 0; i < code.size(); i++)
+		{
+			cout << code[i];
+			out << code[i];
+			if (i && i % 50 == 0)
+			{
+				cout << endl;
+				out << endl;
+			}
+		}
+		f.close();
+		out.close();
+	}
+
+	void PrintTree()
+	{
+		g_ht.print_tree();
 	}
 
 	void menu()
@@ -167,7 +194,6 @@ int main()
 	hfsys.TestReadFile();
 	hfsys.TestEncode();
 	hfsys.TestDecode();
-
-	//hfsys.TestDncode();
+	hfsys.Print();
 	return 0;
 }
