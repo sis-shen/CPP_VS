@@ -44,7 +44,8 @@ namespace sup
 			{
 				_vertexs[i] = arr[i];
 				_weigh[i] = weighs[i];
-				_index[weighs[i]] = i;
+				_weigh2index[weighs[i]] = i;
+				_index[arr[i]] = i;
 				Node* cur = new Node(weighs[i]);
 				_IndexToNode[i] = cur;
 				minq.push(cur);
@@ -83,6 +84,7 @@ namespace sup
 			}
 
 			_index[t] = _vertexs.size();
+			_weigh2index[w] = _vertexs.size();
 			_vertexs.push_back(t);
 			_weigh.push_back(w);
 			remake_tree();
@@ -133,7 +135,7 @@ namespace sup
 				else
 				{
 					parent->_left = cur2;
-					parent->_right = cur2;
+					parent->_right = cur1;
 				}
 
 				minq.push(parent);
@@ -181,6 +183,18 @@ namespace sup
 			}
 			else
 			{
+				cout << "failed to get " << t << endl;
+				assert(false);
+			}
+		}
+
+		int get_weight2index(int w)
+		{
+			if (_weigh2index.count(w))
+				return _weigh2index[w];
+			else
+			{
+				cout << "failed to get weight " << w << endl;
 				assert(false);
 			}
 		}
@@ -235,11 +249,53 @@ namespace sup
 				}
 			}
 			f.close();
-			for (int i = 0; i < _vertexs.size(); i++)
+			for (int i = 0; i < _vertexs.size(); i++)//重建哈希表
 			{
 				_index[_vertexs[i]] = i;
+				_weigh2index[_weigh[i]] = i;
 			}
 			remake_tree();
+		}
+
+		string decode(const string& code)
+		{
+			string ret;
+			int index = 0;
+			Node* root = minq.top();
+			Node* cur = root;
+			while (index < code.size())
+			{
+				if (cur->_left == nullptr && cur->_right == nullptr)
+				{
+					//找到叶子节点，即到头了
+					T ch = _vertexs[get_weight2index(cur->_w)];//尾插字节
+					if (ch == '#')
+						ret.push_back(' ');
+					else
+						ret.push_back(ch);
+					cur = root;//重新找下一个字节
+				}
+				if (code[index] == '0')
+				{
+					if (cur->_left == nullptr) assert(false);
+					cur = cur->_left;
+				}
+				else
+				{
+					if (cur->_right == nullptr) assert(false);
+					cur = cur->_right;
+				}
+				index++;
+			}
+
+			T ch = _vertexs[get_weight2index(cur->_w)];//尾插字节
+			if (ch == '#')
+				ret.push_back(' ');
+			else
+				ret.push_back(ch);
+
+			//reverse(ret.begin(), ret.end());
+			return ret;
 		}
 
 		bool empty()
@@ -285,10 +341,11 @@ namespace sup
 		}
 
 	private:
-		vector<T> _vertexs;
-		vector<int> _weigh;
-		unordered_map<T, int> _index;
-		unordered_map<int, Node*> _IndexToNode;
+		vector<T> _vertexs;//下标->顶点
+		vector<int> _weigh;//下标->权重
+		unordered_map<T, int> _index;//顶点->下标
+		unordered_map<int, Node*> _IndexToNode;//下标->节点
+		unordered_map<int, int> _weigh2index;//权重->下标
 		priority_queue<Node*, vector<Node*>, Cmp> minq;
 	};
 }

@@ -2,11 +2,6 @@
 
 #include "hefman.h"
 
-
-
-
-
-
 class HefmanTreeSystem
 {
 public:
@@ -72,6 +67,12 @@ public:
 		Encode();
 	}
 
+	void TestDecode()
+	{
+		g_ht.read_file("hfmTree.txt");
+		Decode();
+	}
+
 	void Init()
 	{
 		int n = 0;
@@ -102,6 +103,11 @@ public:
 
 	}
 
+	void ReadFile()
+	{
+		g_ht.read_file("hfmTree.txt");
+	}
+
 	void Encode()
 	{
 		fstream f;
@@ -113,9 +119,9 @@ public:
 			for (auto ch : line)
 			{
 				if (ch != ' ')
-					code += g_ht.get_index(ch);
+					code += g_ht.generate_code(ch);
 				else
-					code += g_ht.get_index('#');
+					code += g_ht.generate_code('#');
 			}
 		}
 
@@ -126,6 +132,21 @@ public:
 		f.close();
 	}
 
+	void Decode()
+	{
+		fstream f;
+		f.open("CodeFile.txt", ios::in);
+		string code;
+		getline(f, code);
+		f.close();
+		string ret;
+		ret = g_ht.decode(code);
+		cout << "ÒëÂë½á¹ûÎª: " << ret;
+		f.open("TextFile.txt", ios::out);
+		f << ret;
+		f.close();
+
+	}
 
 	void menu()
 	{
@@ -145,5 +166,8 @@ int main()
 	HefmanTreeSystem hfsys;
 	hfsys.TestReadFile();
 	hfsys.TestEncode();
+	hfsys.TestDecode();
+
+	//hfsys.TestDncode();
 	return 0;
 }
