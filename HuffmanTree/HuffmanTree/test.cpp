@@ -166,6 +166,7 @@ public:
 				out << endl;
 			}
 		}
+		cout << endl;
 		f.close();
 		out.close();
 	}
@@ -195,5 +196,6 @@ int main()
 	hfsys.TestEncode();
 	hfsys.TestDecode();
 	hfsys.Print();
+	hfsys.PrintTree();
 	return 0;
 }

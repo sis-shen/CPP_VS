@@ -345,32 +345,32 @@
 //    return 0;
 //}
 
-#include <iostream>
-
-using namespace std;
-
-//template<class T>
-//void my_swap(T& t1,T& t2)
-//{
-//	T tmp = t1;
-//	t1 = t2;
-//	t2 = tmp;
-//}
+//#include <iostream>
+//
+//using namespace std;
+//
+////template<class T>
+////void my_swap(T& t1,T& t2)
+////{
+////	T tmp = t1;
+////	t1 = t2;
+////	t2 = tmp;
+////}
+////
+////int main()
+////{
+////	int num = 1e9 + 7;
+////	double q = 1e9 + 7;
+////	cout << num<<endl;
+////	cout << q << endl;
+////	return 0;
+////}
 //
 //int main()
 //{
-//	int num = 1e9 + 7;
-//	double q = 1e9 + 7;
-//	cout << num<<endl;
-//	cout << q << endl;
+//	int a = 1;
+//	int ret = (++a) + (++a) + (++a);
+//	cout << ret;
+//
 //	return 0;
 //}
-
-int main()
-{
-	int a = 1;
-	int ret = (++a) + (++a) + (++a);
-	cout << ret;
-
-	return 0;
-}

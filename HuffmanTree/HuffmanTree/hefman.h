@@ -145,20 +145,83 @@ namespace sup
 		void print_tree()
 		{
 			int height = tree_height();
+			int width = pow(2, height+1) - 3;
 
-			int sz = pow(2, height);
+			int sz = pow(2, height)-1;
 			vector<Node*> tree(sz, nullptr);
+			vector<int> NodePos(sz);
+
 			fill_full_tree(minq.top(), tree, 0);//从根开始构建满二叉树
-			
-			for (int i = 0; i < sz; i++)
+			int corr = 0;
+			int i = 1;
+
+			//根节点单独处理
+			NodePos[0] = pow(2, height) - 1;
+			string tmp(width+1, ' ');
+
+			Node* cur = tree[0];
+			string num = to_string(cur->_w);
+			for (int d = 0; d < num.size(); d++)
 			{
-				int h = sqrt(i+1);
-				//打印空格
-				Node* root = tree[i];
-				string line;
+				tmp[NodePos[0] + d] = num[d];
+			}
+			
+			cout << tmp << endl;
+			while(i<sz)//开始逐行打印,i=1进入循环
+			{
+				//获取高度
+				int h = 0;
+				while ((int)pow(2, h+1) < i+2) h++;//1->1,2->1,3->2,6->2
+
+
+				//打印链接线
 				for (int j = 0; j < pow(2, height - h) - 1; j++)
-					line.push_back(' ');
-				cout << line;
+				{
+					string edge(width+1, ' ');
+					//遍历parent
+					for (int k = pow(2, h-1) - 1; k < pow(2, h) - 1 and k < tree.size(); k++)
+					{
+						if (tree[k])//parent存在
+						{
+							if (tree[k * 2 + 1])//左子树存在
+							{
+								edge[NodePos[k] - j - 1] = '/';
+							}
+							if (tree[k * 2 + 2])
+							{
+								edge[NodePos[k] + j + 1] = '\\';
+							}
+						}
+					}
+					cout << edge << endl;
+				}
+
+				string line(width+1, ' ');
+				for (;i<sz && i <= pow(2, h + 1) - 2; i++)
+				{
+					int pos_par = (i - 1) / 2;
+					int len = (int)pow(2, height - h);
+					if (pos_par * 2 + 1 == i)
+						NodePos[i] = NodePos[pos_par] - len;
+					else
+						NodePos[i] = NodePos[pos_par] + len;
+
+					if (_Node2Index.count(tree[i]))
+					{
+						line[NodePos[i]] = _vertexs[_Node2Index[tree[i]]];
+					}
+					else if (tree[i])
+					{
+						Node* cur = tree[i];
+						string num = to_string(cur->_w);
+						for (int d = 0; d < num.size(); d++)
+						{
+							line[NodePos[i] + d] = num[d];
+						}
+					}
+
+				}
+				cout << line << endl;
 			}
 
 		}
@@ -181,8 +244,8 @@ namespace sup
 		int _tree_height(Node* root)
 		{
 			if (root == nullptr) return 0;
-			int left = tree_height(root->_left);
-			int right = tree_height(root->_right);
+			int left = _tree_height(root->_left);
+			int right = _tree_height(root->_right);
 			return 1 + max(left, right);
 		}
 
