@@ -92,11 +92,37 @@ using namespace std;
 //	return 0;
 //}
 
+//int main()
+//{
+	//fstream f;
+	////f.open("ff.txt",ios::out);
+	//f.open("ff.txt", ios::binary);
+	//f << "test" << "\r\n";
+	//f.close();
+//
+//	f.open("ff.txt", ios::binary | ios::in);
+//	char ch;
+//	while ((ch = f.get()) != EOF)
+//	{
+//		if (ch == '\r')
+//			cout << "\\r";
+//		else if (ch == '\n')
+//			cout << "\\n";
+//		else
+//			cout << ch;
+//	}
+//	return 0;
+//}
+
 int main()
 {
-	fstream f;
-	f.open("ff.txt", ios::binary);
-	f << 123 ;
+	fstream f("ff.txt", ios::out);
+	f << "123|";
 	f.close();
+	
+	f.open("ff.txt", ios::ate | ios::out | ios::in);
+	f << "456";
+	f.close();
+
 	return 0;
 }
