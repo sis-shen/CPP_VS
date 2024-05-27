@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <string>
 
 using namespace std;
 
@@ -114,15 +115,60 @@ using namespace std;
 //	return 0;
 //}
 
+//int main()
+//{
+//	fstream f("ff.txt", ios::out);
+//	f << "123|";
+//	f.close();
+//	
+//	f.open("ff.txt", ios::ate | ios::out | ios::in);
+//	f << "456";
+//	f.close();
+//
+//	return 0;
+//}
+
+
+//int main()
+//{
+//	//提前准备一个待提取文件
+//	fstream f;
+//	f.open("ff.txt", ios::out);
+//	f << "line 1" << endl << "line 2" << endl;
+//	f.close();
+//	//================
+//	f.open("ff.txt");
+//	string str;
+//	while (getline(f, str))//当f为空时，循环停止
+//	{
+//		cout << str << endl;//打印每行,str内不含换行符
+//	}
+// f.close();
+//	return 0;
+//}
+
 int main()
 {
-	fstream f("ff.txt", ios::out);
-	f << "123|";
+	//提前准备一个待提取文件
+	fstream f;
+	f.open("ff.txt", ios::out);
+	f << "line 1" << endl << "line 2" << endl;
 	f.close();
-	
-	f.open("ff.txt", ios::ate | ios::out | ios::in);
-	f << "456";
+	//================
+
+	f.open("ff.txt");
+	char ch;
+	while (f.get(ch))//获取字符
+	{
+		cout << ch;//打印字符
+	}
 	f.close();
 
+	f.open("ff.txt");
+	while ((ch = f.get()) != EOF)//因为优先级的问题，必须加括号
+	{
+		cout << ch;//打印字符
+	}
+	f.close();
 	return 0;
 }

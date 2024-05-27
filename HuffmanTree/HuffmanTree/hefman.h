@@ -5,7 +5,8 @@
 #include <unordered_map>
 #include <string>
 #include <cassert>
-#include <fstream>
+#include <fstream> 
+#include <stdexcept>
 using namespace std;
 
 
@@ -253,8 +254,16 @@ namespace sup
 
 		string generate_code(const T& t)
 		{
-			int index = get_index(t);
-			return _generate_code(index);
+			try
+			{
+				int index = get_index(t);
+				return _generate_code(index);
+			}
+			catch (const invalid_argument& ia)
+			{
+				cout << "get_index error" << ia.what() << endl;
+				throw invalid_argument("±àÂëÉú³ÉÊ§°Ü");
+			}
 		}
 
 		void print_code_list()
@@ -273,8 +282,9 @@ namespace sup
 			}
 			else
 			{
-				cout << "failed to get " << t << endl;
-				assert(false);
+				string exc("×Ö·û²éÑ¯Ê§°Ü: ");
+				exc.push_back(t);
+				throw invalid_argument(exc);
 			}
 		}
 

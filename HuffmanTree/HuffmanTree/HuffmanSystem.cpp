@@ -6,72 +6,27 @@ class HefmanTreeSystem
 {
 public:
 
-	//void Run()
-	//{
-	//	char ch;
-	//	while (true)
-	//	{
-	//		menu();
-	//		cin >> ch;
-	//		switch (ch)
-	//		{
-	//		case 'I': Init(); break;
-	//		case 'E': Encode(); break;
-	//		case 'D': Decode(); break;
-	//		case 'P': PrintCode(); break;
-	//		case 'T': TreePrint(); break;
-	//		default:
-	//			cout << "输入非法，请重新输入" << endl << endl;
-	//			break;
-	//		}
-	//	}
-	//}
-
-	void TestHefmanTree()
+	void run()
 	{
-		string str = "abcdef";
-		vector<char> ch(str.begin(), str.end());
-		vector<int> weigh({ 9,8,7,6,5,4 });
-		sup::HefmanTree<char> tmp(ch, weigh);
-		sup::HefmanTree<char>ht = tmp;
-
-		ht.print_tree();
-		cout << endl;
-		ht.print_code_list();
-
-		ht.remake_tree();
-		ht.print_tree();
-		cout << endl;
-		ht.print_code_list();
+		char ch;
+		while (true)
+		{
+			menu();
+			cin >> ch;
+			switch (ch)
+			{
+			case 'i': Init(); break;
+			case 'e': Encode(); break;
+			case 'd': Decode(); break;
+			case 'p': Print(); break;
+			case 't': PrintTree(); break;
+			default:
+				cout << "输入非法，请重新输入" << endl << endl;
+				break;
+			}
+		}
 	}
 
-	void TestInit()
-	{
-		cout << "TestInit()" << endl;
-
-		Init();
-
-		g_ht.print_code_list();
-	}
-
-	void TestReadFile()
-	{
-		sup::HefmanTree<char> ht;
-		ht.read_file("hfmTree.txt");
-		ht.print_code_list();
-	}
-
-	void TestEncode()
-	{
-		g_ht.read_file("hfmTree.txt");
-		Encode();
-	}
-
-	void TestDecode()
-	{
-		g_ht.read_file("hfmTree.txt");
-		Decode();
-	}
 
 	void Init()
 	{
@@ -118,10 +73,20 @@ public:
 		{
 			for (auto ch : line)
 			{
-				if (ch != ' ')
-					code += g_ht.generate_code(ch);
-				else
-					code += g_ht.generate_code('#');
+				try
+				{
+					if (ch != ' ')
+					{
+						code += g_ht.generate_code(ch);
+
+					}
+					else
+						code += g_ht.generate_code('#');
+				}
+				catch (const invalid_argument& ia)
+				{
+					cout << "Encode error:" << ia.what() << endl;
+				}
 			}
 		}
 
@@ -192,10 +157,6 @@ private:
 int main()
 {
 	HefmanTreeSystem hfsys;
-	hfsys.TestReadFile();
-	hfsys.TestEncode();
-	hfsys.TestDecode();
-	hfsys.Print();
-	hfsys.PrintTree();
+	hfsys.run();
 	return 0;
 }
