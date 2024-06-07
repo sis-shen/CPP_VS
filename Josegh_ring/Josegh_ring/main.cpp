@@ -11,6 +11,7 @@ int main()
 	cin >> m;
 	cout << "请输入人数n: " << endl;
 	cin >> n;
+	cout << "请依次输入每个人的权重" << endl;
 	vector<int> arr(n);
 	for (int i = 0; i < n; i++)
 	{
@@ -23,8 +24,6 @@ int main()
 		lst.push_back({ i + 1,arr[i] });
 	}
 
-	int m = 0;
-	cout << "请输入第一个m的值: ";
 
 	auto cur = lst.begin();
 	vector<int> ret;
@@ -36,7 +35,12 @@ int main()
 			if (cur == lst.end()) ++cur;
 		}
 
-		auto tmp = ++cur;
+		auto tmp = cur;
+		++cur;
+		if (cur == lst.end())
+		{
+			++cur;
+		}
 		ret.push_back(tmp->first);//储存编号
 		m = tmp->second;//更新m
 		lst.erase(tmp);
@@ -51,6 +55,6 @@ int main()
 	}
 	cout << endl;
 
-
+	main();
 	return 0;
 }

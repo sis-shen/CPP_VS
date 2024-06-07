@@ -1,4 +1,7 @@
 #pragma once
+#include <vector>
+#include <iostream>
+using namespace std;
 //双向循环带头链表
 
 namespace list
@@ -13,7 +16,7 @@ namespace list
 		ListNode(const T& value = T())
 			:_next(nullptr)
 			,_prev(nullptr)
-			,T(value)
+			,_value(value)
 		{}
 
 	};
@@ -26,7 +29,7 @@ namespace list
 
 		node* _ptr;
 
-		_list_iterator(const node* ptr = nullptr)
+		_list_iterator(node* ptr = nullptr)
 			:_ptr(ptr)
 		{}
 
@@ -112,6 +115,7 @@ namespace list
 			{
 				pop_front();
 			}
+			return true;
 		}
 
 		bool push_front(const T& value)
@@ -192,9 +196,10 @@ namespace list
 			auto cur = begin();
 			while (cur != end())
 			{
-				cout << *cur << " ";
+				cout << (*cur).second << " ";
 				++cur;
 			}
+			++cur;
 			cout << endl;
 		}
 

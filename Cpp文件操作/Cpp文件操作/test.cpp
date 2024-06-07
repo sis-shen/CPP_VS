@@ -150,8 +150,10 @@ using namespace std;
 int main()
 {
 	//提前准备一个待提取文件
-	fstream f;
+	fstream f,f2;
 	f.open("ff.txt", ios::out);
+	f2.open("f2.txt", ios::out);
+	f2 << 666 << endl;
 	f << "line 1" << endl << "line 2" << endl;
 	f.close();
 	//================
