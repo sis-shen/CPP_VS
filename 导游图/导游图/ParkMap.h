@@ -58,8 +58,8 @@ public:
 			cout << "顶点之间无路径" << endl;
 			return;
 		}
+		int ww = vvPath[i][j];
 
-		cout << "最短路径为：";
 		vector<int>path;
 		while (i != j)
 		{
@@ -71,12 +71,12 @@ public:
 
 		reverse(path.begin(), path.end());
 
-		cout << "最短路径为:";
+		cout << "最短路径为:(总权值 "<< ww << " ) ";
 		for (int i = 0; i < path.size() - 1; i++)
 		{
-			cout << _vertexs[i] << "->";
+			cout << _vertexs[path[i]] << "->";
 		}
-		cout << _vertexs[path.size() - 1] << endl;
+		cout << _vertexs [path[path.size() - 1]] << endl;
 	}
 
 	void BestPath()
@@ -88,12 +88,12 @@ public:
 		int ret = INT_MAX;
 		_BestPath(path, 0, 1, 0, visit, ret, retPath);
 
-		cout << "最佳路线为: ";
+		cout << "最佳路线为:(总权值 "<<ret<<" ) ";
 		for (auto index : retPath)
 		{
 			cout << _vertexs[index] << "->";
 		}
-		cout << _vertexs[0];
+		cout << _vertexs[0]<<endl;
 	}
 
 	void _BestPath(vector<int>& path, int srci, int cnt, int pw, vector<bool>& visit, int& ret, vector<int>& retPath)

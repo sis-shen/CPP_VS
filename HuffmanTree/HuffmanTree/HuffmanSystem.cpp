@@ -15,11 +15,11 @@ public:
 			cin >> ch;
 			switch (ch)
 			{
-			case 'i': Init(); break;
-			case 'e': Encode(); break;
-			case 'd': Decode(); break;
-			case 'p': Print(); break;
-			case 't': PrintTree(); break;
+			case 'I': Init(); break;
+			case 'E': Encode(); break;
+			case 'D': Decode(); break;
+			case 'P': Print(); break;
+			case 'T': PrintTree(); break;
 			default:
 				cout << "ÊäÈë·Ç·¨£¬ÇëÖØÐÂÊäÈë" << endl << endl;
 				break;
@@ -143,11 +143,11 @@ public:
 
 	void menu()
 	{
-		cout << "=============================";
-		cout << "         ÇëÊäÈëÖ¸Áî            ";
-		cout << "    I.³õÊ¼»¯  E.±àÂë  D.ÒëÂë     ";
-		cout << "    P.´òÓ¡´úÂë  T.´òÓ¡ºÕ·òÂüÊ÷     ";
-		cout << "=============================";
+		cout << "=============================" << endl;
+		cout << "         ÇëÊäÈëÖ¸Áî            "<<endl;
+		cout << "    I.³õÊ¼»¯  E.±àÂë  D.ÒëÂë     "<<endl;
+		cout << "    P.´òÓ¡´úÂë  T.´òÓ¡ºÕ·òÂüÊ÷     "<<endl;
+		cout << "============================="<<endl;
 	}
 private:
 	sup::HefmanTree<char> g_ht;

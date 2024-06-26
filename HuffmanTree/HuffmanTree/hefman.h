@@ -145,6 +145,11 @@ namespace sup
 
 		void print_tree()
 		{
+			if (is_one_node())
+			{
+				cout << _vertexs[_Node2Index[minq.top()]] << endl;
+				return;
+			}
 			int height = tree_height();
 			int width = pow(2, height+1) - 3;
 
@@ -348,9 +353,13 @@ namespace sup
 
 		string decode(const string& code)
 		{
+			Node* root = minq.top();
+			if (is_one_node())
+			{
+				return { _vertexs[_Node2Index[root]] };
+			}
 			string ret;
 			int index = 0;
-			Node* root = minq.top();
 			Node* cur = root;
 			while (index < code.size())
 			{
@@ -395,6 +404,10 @@ namespace sup
 	private:
 		string _generate_code(int index)
 		{
+			if (is_one_node())
+			{
+				return "0";
+			}
 			Node* cur = _IndexToNode[index];
 			string ret;
 			while (cur->_parent)
@@ -407,6 +420,13 @@ namespace sup
 			}
 			reverse(ret.begin(), ret.end());
 			return ret;
+		}
+
+		bool is_one_node()
+		{
+			Node* root = minq.top();
+			if (root->_left == nullptr && root->_right == nullptr) return true;
+			return false;
 		}
 
 		void destroy_tree()
