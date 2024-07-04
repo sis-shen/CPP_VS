@@ -3,6 +3,8 @@
 
 namespace sup
 {
+
+
 	template<class T>
 	struct _list_node
 	{
@@ -16,6 +18,8 @@ namespace sup
 			,_val(val)
 		{}
 	};
+
+
 
 	template<class T,class Ref>
 	struct _list_iterator
@@ -51,6 +55,37 @@ namespace sup
 			return _ptr != it._ptr;
 		}
 		
+	};
+
+	template<class Iterator, class Ref, class Ptr>
+	struct Reverse_iterator
+	{
+		typedef Reverse_iterator<Iterator,Ref,Ptr> self;
+		typedef _list_node<T>* node;
+
+		Reverse_iterator(node ptr = nullptr) :_it(ptr) {}
+
+		Ref operator*()
+		{
+			return *_it;
+		}
+
+		Ptr operator->()
+		{
+			return _it.operator->();
+		}
+
+		self operator++()
+		{
+			return --_it;
+		}
+
+		self operator--()
+		{
+			return ++_it;
+		}
+
+		Iterator _it;
 	};
 
 	template<class T>

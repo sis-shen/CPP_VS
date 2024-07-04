@@ -41,12 +41,30 @@ using namespace std;
 //	return 0;
 //}
 
-int main()
-{
-	for (double i = 12.0; i <= 82.0; i += 0.5)
-	{
-		printf("%.1lf ", i);
-	}
+#include <iostream>
+#include <vector>
+using namespace std;
 
-	return 0;
+bool isLunarYear(int year)
+{
+    if (year % 400 == 0 || (year % 100 != 0 && year % 4 == 0)) return true;
+    else return false;
+}
+
+vector<int> vmonth0 = { 0,31,28,31,28,31,30,31,31,30,31,30,31 };
+
+int main() {
+    int year, ds;
+    while (~scanf_s("%d %d", &year, &ds))
+    {
+        vector<int> vmonth(vmonth0);
+        if (isLunarYear(year)) vmonth[2]++;
+        int month = 1;
+        while (ds > vmonth[month])
+        {
+            ds -= vmonth[month];
+            month++;
+        }
+        printf("%d-%02d-%02d\n", year, month, ds);
+    }
 }

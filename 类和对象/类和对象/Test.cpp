@@ -118,6 +118,14 @@ int main()
 	return 0;
 }
 
+//int main()
+//{
+//	A* p = new A[10];
+//
+//	delete p;
+//
+//	return 0;
+//}
 
 
 
