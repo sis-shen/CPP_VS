@@ -368,6 +368,8 @@ namespace key_value
 			else
 				prev->_left = new Node(key,v);
 
+			return true;
+
 		}
 
 		void InOrder()

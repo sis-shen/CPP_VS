@@ -1,1 +1,1 @@
-get msg : this is a msg code:1
+this is a msg
