@@ -99,16 +99,51 @@
 //    cout << ret;
 //
 //}
-
+#define _CRT_SECURE_NO_WARNINGS 1
 
 #include <iostream>
+#include <vector>
 #include "vector"
-#include "cmath"
 using namespace std;
-vector<int> arr(1, 0);
-
 
 int main() {
-	
-
+    int n, m;
+    scanf("%d %d", &n, &m);
+    vector<vector<int>> matrix(n, (vector<int>(m, 0)));
+    auto ret = matrix;
+    int num = 0;
+    for (int i = 0; i < n; ++i)
+    {
+        for (int j = 0; j < m; ++j)
+        {
+            scanf("%d", &num);
+            matrix[i][j] = num;
+        }
+    }
+    vector<int> row(n, 0);
+    vector<int> col(m, 0);
+    for (int i = 0; i < n; ++i)
+    {
+        for (int j = 0; j < m; ++j)
+        {
+            row[i] += matrix[i][j];
+            col[j] += matrix[i][j];
+        }
+    }
+    for (int i = 0; i < n; ++i)
+    {
+        for (int j = 0; j < m; ++j)
+        {
+            ret[i][j] = row[i] + col[j] - matrix[i][j];
+        }
+    }
+    for (int i = 0; i < n; ++i)
+    {
+        for (int j = 0; j < m; ++m)
+        {
+            printf("%d ", matrix[i][j]);
+        }
+        printf("\n");
+    }
+    return 0;
 }
