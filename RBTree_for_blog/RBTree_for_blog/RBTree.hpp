@@ -37,7 +37,9 @@ class __rbtree_iterator
 public:
 	__rbtree_iterator(const linkeType& ptr)
 		:_ptr(ptr)
-	{}
+	{
+		if (_ptr == nullptr)exit(-1);//非法的空迭代器
+	}
 
 	__rbtree_iterator(const const_iterator& const_it)
 		:_ptr(const_it._ptr)
@@ -61,11 +63,7 @@ public:
 				_ptr = parent;
 				parent = _ptr->_parent;
 			}
-			if (parent->_right == nullptr || parent->_right==parent)
-			{
-				//特殊情况，子树的根节点没有右子树
-				_ptr = parent;
-			}
+			_ptr = parent;
 		}
 		return (*this);
 	}
@@ -82,13 +80,13 @@ public:
 			while (right)
 			{
 				_ptr = right;
-				right->_ptr;
+				right = _ptr->_right;
 			}
 		}
 		else if (_ptr->_left)
 		{
 			_ptr = _ptr->_left;
-			linkeType right = _ptr->_right;
+			linkeType right = _ptr->_right;//寻找左子树的最右结点
 			while (right)
 			{
 				_ptr = right;
@@ -111,12 +109,22 @@ public:
 
 	Ref operator*()
 	{
-		return *_ptr;
+		return _ptr->_value;
 	}
 
 	Ptr operator->()
 	{
-		return _ptr;
+		return &(_ptr->_value);
+	}
+
+	bool operator!=(const self& it)
+	{
+		return _ptr != it._ptr;
+	}
+
+	bool operator==(const self& it)
+	{
+		return !operator!=(it);
 	}
 
 
@@ -129,12 +137,13 @@ class RBTree
 {
 	typedef RBTreeNode<V> Node;
 	typedef RBTree<K, V, KeyOfValue, Compare> self;
+public:
 	typedef __rbtree_iterator<V, V&, V*> iterator;
 	typedef __rbtree_iterator<V, const V&, const V*>const_iterator;
 
 public:
 	RBTree(const Compare& cmp =Compare())
-		:_cmp(cmp), _header(nullptr)
+		:_cmp(cmp), _header(nullptr),_size(0)
 	{
 		//创建哨兵位头结点，使后面调整树形状不用区分根节点
 		_header = new Node(V(), Black);
@@ -243,6 +252,15 @@ protected:
 	}
 
 public:
+	size_t size()const
+	{
+		return _size;
+	}
+	bool empty()const
+	{
+		return _size == 0;
+	}
+public:
 	bool Find(const K& key)
 	{
 		Node* prev = nullptr;
@@ -267,18 +285,21 @@ public:
 		else return true;//走到头的过程中左转了一次之后一直向右走
 	}
 
-	bool Insert(const V& value)
+
+
+	std::pair<bool,iterator> Insert(const V& value)
 	{
 		Node* proot = GetRoot();
 		if (proot == nullptr)//树为空
 		{
 			Node* newnode = new Node(value, Black);
+			_size++;
 			newnode->_parent = _header;
 			_header->_parent = newnode;
-			return true;
+			return { true,iterator(newnode) };
 		}
 
-		if (Find(_kof(value)))return false;//结点已存在，插入失败
+		if (Find(_kof(value)))return { false,end()};//结点已存在，插入失败
 		Node* cur = proot;
 		Node* parent = proot->_parent;
 		while (cur)
@@ -298,6 +319,7 @@ public:
 		}
 		//开始插入
 		Node* newnode = new Node(value, Red);
+		_size++;
 		if (_cmp(_kof(parent->_value),_kof(value) ))
 		{
 			//插入右子树
@@ -354,8 +376,10 @@ public:
 		root->_color = Black;//修改根节点颜色
 		_header->_left = _header;
 		_header->_right = _header;
-		return true;
+		return { true,iterator(newnode) };
 	}
+
+
 
 private:
 	void RotateR(Node* node)
@@ -374,6 +398,7 @@ private:
 		parent->_parent = ggp;
 
 		gp->_left = parent->_right;
+		if (parent->_right)parent->_right->_parent = gp;
 		parent->_right = gp;
 		gp->_parent = parent;
 
@@ -403,6 +428,7 @@ private:
 		parent->_parent = ggp;
 		
 		gp->_right = parent->_left;
+		if (parent->_left)parent->_left->_parent = gp;
 		parent->_left = gp;
 		gp->_parent = parent;
 
@@ -426,6 +452,7 @@ private:
 		if (gp == nullptr) assert(false);
 
 		parent->_right = cur->_left;
+		if (cur->_left)cur->_left->_parent = parent;
 		cur->_left = parent;
 		parent->_parent = cur;
 		cur->_parent = gp;
@@ -444,6 +471,7 @@ private:
 		if (gp == nullptr) assert(false);
 
 		parent->_left = cur->_right;
+		if (cur->_right)cur->_right->_parent = parent;
 		cur->_right = parent;
 		parent->_parent = cur;
 		cur->_parent = gp;
@@ -507,4 +535,5 @@ private:
 	Compare _cmp;
 	KeyOfValue _kof;
 	Node* _header;
+	size_t _size;//记录节点个数
 };

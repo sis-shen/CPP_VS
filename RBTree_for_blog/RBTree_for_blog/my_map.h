@@ -8,6 +8,9 @@ namespace sup
 	class map
 	{
 	public:
+		typedef RBTree::iterator iterator;
+		typedef RBTree::const_iterator const_iterator;
+	public:
 		map()
 			:_rbtree()
 		{}
@@ -18,18 +21,14 @@ namespace sup
 
 		V& operator[](const K& key)
 		{
-			auto it = _rbtree.Find(key);
-			if (it == _rbtree.end())
-			{
-				_rbtree.Insert(key, std::pair{ key,V() });
-			}
-			else
-			{
-				return *it;
-			}
+			std::pair<bool, iterator> PBI = _rbtree.Insert(key, std::pair{ key,V() });
+			return *(PBI.second);
 		}
 
-		const V& operator[]
+		const V& operator[](const K&key) const
+		{
+			
+		}
 	
 	private:
 		class KeyOfValue
