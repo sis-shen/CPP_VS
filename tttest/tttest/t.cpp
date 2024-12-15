@@ -1,38 +1,37 @@
 ﻿#include <iostream>
-#include <algorithm>
-#include <vector>
 
 using namespace std;
 
 int main()
 {
-    int n, x;
-    cin >> n >> x;
-    x *= 2;
-    vector<int> arr(n);
-    int left = 0, right = 0;
-    int sum = 0;
-    n--;
-    int ret = 0;
-    for (int i = 0; i < n; ++i)
-    {
-        cin >> arr[i];
-    }
-    while (left < n)
-    {
-        while (right < n && sum < x)
-        {
-            sum += right;
-            right++;
-        }
-        ret = max(ret, right - left);
-        sum -= arr[left];
-        left++;
-    }
-    ret = max(ret, right - left);
-
-    cout << ret << endl;
-
-
-    return 0;
+	long long cnt = 202420242020;
+	long long num = 202420242020 / 10 * 120+1;
+	long long t = 202420242024;
+	while (cnt < t)
+	{
+		if (num % 20 == 0 || num % 24 == 0)
+		{
+			cnt++;
+			//printf("%d ", cnt);
+			if (cnt == t)
+				break;
+		}
+		num++;
+	}
+	printf("%lld", num);
+	return 0;
 }
+
+
+
+//int main()
+//{
+//	for (int i = 1; i < 480; ++i)
+//	{
+//		if (i % 20 == 0 && i % 24 == 0)
+//		{
+//			cout << i << endl;
+//		}
+//	}
+//	return 0;
+//}
