@@ -47,12 +47,40 @@ template <class T>
 struct my_remove_const<const T> {
 	using type = T;
 };
+
+//**********
+template <class T>
+auto is_sizeable(T x)->std::void_t<decltype(x.size())> {
+	std::cout << "sizeable" << endl;
+}
+
+void is_sizeable(...) {
+	cout << "not sizeable" << endl;
+}
+
+template <class T>
+typename std::enable_if_t<std::is_integral_v<T>, T>
+add_one(T t) {
+	return t + 1;
+}
+
+template <class T>
+typename std::enable_if_t<std::is_floating_point_v<T>, T>
+add_one(T t) {
+	cout << "float add one" << endl;
+	return t + 1.0;
+}
 int main()
 {
-	cout << to_sum<5>() << endl;
-	cout << my_is_pointer<int>::value << endl;
-	cout << my_is_same<int, int>::value << endl;
-	cout << my_is_same<int, const int>::value << endl;
-	cout << my_is_same<int, my_remove_const<const int>::type>::value << endl;
+	//cout << to_sum<5>() << endl;
+	//cout << my_is_pointer<int>::value << endl;
+	//cout << my_is_same<int, int>::value << endl;
+	//cout << my_is_same<int, const int>::value << endl;
+	//cout << my_is_same<int, my_remove_const<const int>::type>::value << endl;
+
+	is_sizeable(string("123"));
+
+	cout << add_one<int>(1) << endl;
+	cout << add_one<float>(2.0) << endl;
 	return 0;
 }
